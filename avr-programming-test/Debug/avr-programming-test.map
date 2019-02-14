@@ -169,7 +169,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x1dc
+.text           0x00000000      0x606
  *(.vectors)
  .vectors       0x00000000       0x26 D:/Programme/Atmel Studio 7.0/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega8/avr4/crtatmega8.o
                 0x00000000                __vector_default
@@ -247,18 +247,41 @@ END GROUP
                 0x0000004c                __vector_18
                 0x0000004e                . = ALIGN (0x2)
  *(.text.*)
- .text.d_eight  0x0000004e       0x76 main.o
+ .text.d_eight  0x0000004e       0x60 main.o
                 0x0000004e                d_eight
+ .text.d_one    0x000000ae       0x4c main.o
+                0x000000ae                d_one
+ .text.d_two    0x000000fa       0x58 main.o
+                0x000000fa                d_two
+ .text.d_three  0x00000152       0x58 main.o
+                0x00000152                d_three
+ .text.d_four   0x000001aa       0x54 main.o
+                0x000001aa                d_four
+ .text.d_five   0x000001fe       0x58 main.o
+                0x000001fe                d_five
+ .text.d_six    0x00000256       0x5c main.o
+                0x00000256                d_six
+ .text.d_seven  0x000002b2       0x50 main.o
+                0x000002b2                d_seven
+ .text.d_nine   0x00000302       0x58 main.o
+                0x00000302                d_nine
+ .text.d_zero   0x0000035a       0x5c main.o
+                0x0000035a                d_zero
+ .text.d_dash   0x000003b6       0x48 main.o
+                0x000003b6                d_dash
  .text.resetModuleDigit
-                0x000000c4       0x76 main.o
-                0x000000c4                resetModuleDigit
- .text.main     0x0000013a       0x9e main.o
-                0x0000013a                main
-                0x000001d8                . = ALIGN (0x2)
+                0x000003fe       0x60 main.o
+                0x000003fe                resetModuleDigit
+ .text.displayTest
+                0x0000045e      0x17c main.o
+                0x0000045e                displayTest
+ .text.main     0x000005da       0x28 main.o
+                0x000005da                main
+                0x00000602                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000001d8        0x0 d:/programme/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr4\libgcc.a(_exit.o)
-                0x000001d8                _exit
-                0x000001d8                exit
+ .fini9         0x00000602        0x0 d:/programme/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr4\libgcc.a(_exit.o)
+                0x00000602                _exit
+                0x00000602                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -277,11 +300,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000001d8        0x4 d:/programme/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr4\libgcc.a(_exit.o)
+ .fini0         0x00000602        0x4 d:/programme/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr4\libgcc.a(_exit.o)
  *(.fini0)
-                0x000001dc                _etext = .
+                0x00000606                _etext = .
 
-.data           0x00800060        0x0 load address 0x000001dc
+.data           0x00800060        0x0 load address 0x00000606
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -299,8 +322,8 @@ END GROUP
  *(.bss*)
  *(COMMON)
                 [!provide]                PROVIDE (__bss_end, .)
-                0x000001dc                __data_load_start = LOADADDR (.data)
-                0x000001dc                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000606                __data_load_start = LOADADDR (.data)
+                0x00000606                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800060        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
@@ -371,42 +394,42 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x30
+.debug_aranges  0x00000000       0x88
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x30 main.o
+                0x00000000       0x88 main.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x76e
+.debug_info     0x00000000      0xe64
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x48c D:/Programme/Atmel Studio 7.0/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega8/avr4/crtatmega8.o
- .debug_info    0x0000048c      0x2e2 main.o
+ .debug_info    0x0000048c      0x9d8 main.o
 
-.debug_abbrev   0x00000000      0x56c
+.debug_abbrev   0x00000000      0x5c7
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x44e D:/Programme/Atmel Studio 7.0/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega8/avr4/crtatmega8.o
- .debug_abbrev  0x0000044e      0x11e main.o
+ .debug_abbrev  0x0000044e      0x179 main.o
 
-.debug_line     0x00000000      0x554
+.debug_line     0x00000000      0xdd7
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x109 D:/Programme/Atmel Studio 7.0/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega8/avr4/crtatmega8.o
- .debug_line    0x00000109      0x44b main.o
+ .debug_line    0x00000109      0xcce main.o
 
-.debug_frame    0x00000000       0x44
+.debug_frame    0x00000000      0x108
  *(.debug_frame)
- .debug_frame   0x00000000       0x44 main.o
+ .debug_frame   0x00000000      0x108 main.o
 
-.debug_str      0x00000000      0x338
+.debug_str      0x00000000      0x390
  *(.debug_str)
  .debug_str     0x00000000      0x17a D:/Programme/Atmel Studio 7.0/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega8/avr4/crtatmega8.o
- .debug_str     0x0000017a      0x1be main.o
-                                0x1f2 (size before relaxing)
+ .debug_str     0x0000017a      0x216 main.o
+                                0x24a (size before relaxing)
 
-.debug_loc      0x00000000      0x120
+.debug_loc      0x00000000      0x3b9
  *(.debug_loc)
- .debug_loc     0x00000000      0x120 main.o
+ .debug_loc     0x00000000      0x3b9 main.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -426,9 +449,9 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0x20
+.debug_ranges   0x00000000       0x78
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x20 main.o
+ .debug_ranges  0x00000000       0x78 main.o
 
 .debug_macro
  *(.debug_macro)

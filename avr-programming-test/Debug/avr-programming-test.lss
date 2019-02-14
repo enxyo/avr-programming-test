@@ -3,29 +3,29 @@ avr-programming-test.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000001dc  00000000  00000000  00000054  2**1
+  0 .text         00000606  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  00000230  2**0
+  1 .data         00000000  00800060  00800060  0000065a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000230  2**0
+  2 .comment      00000030  00000000  00000000  0000065a  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000260  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000068c  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000030  00000000  00000000  0000029c  2**0
+  4 .debug_aranges 00000088  00000000  00000000  000006c8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000076e  00000000  00000000  000002cc  2**0
+  5 .debug_info   00000e64  00000000  00000000  00000750  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000056c  00000000  00000000  00000a3a  2**0
+  6 .debug_abbrev 000005c7  00000000  00000000  000015b4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000554  00000000  00000000  00000fa6  2**0
+  7 .debug_line   00000dd7  00000000  00000000  00001b7b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000044  00000000  00000000  000014fc  2**2
+  8 .debug_frame  00000108  00000000  00000000  00002954  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000338  00000000  00000000  00001540  2**0
+  9 .debug_str    00000390  00000000  00000000  00002a5c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000120  00000000  00000000  00001878  2**0
+ 10 .debug_loc    000003b9  00000000  00000000  00002dec  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000020  00000000  00000000  00001998  2**0
+ 11 .debug_ranges 00000078  00000000  00000000  000031a5  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -63,16 +63,16 @@ Disassembly of section .text:
   32:	10 e0       	ldi	r17, 0x00	; 0
   34:	a0 e6       	ldi	r26, 0x60	; 96
   36:	b0 e0       	ldi	r27, 0x00	; 0
-  38:	ec ed       	ldi	r30, 0xDC	; 220
-  3a:	f1 e0       	ldi	r31, 0x01	; 1
+  38:	e6 e0       	ldi	r30, 0x06	; 6
+  3a:	f6 e0       	ldi	r31, 0x06	; 6
   3c:	02 c0       	rjmp	.+4      	; 0x42 <__SREG__+0x3>
   3e:	05 90       	lpm	r0, Z+
   40:	0d 92       	st	X+, r0
   42:	a0 36       	cpi	r26, 0x60	; 96
   44:	b1 07       	cpc	r27, r17
   46:	d9 f7       	brne	.-10     	; 0x3e <__SP_H__>
-  48:	78 d0       	rcall	.+240    	; 0x13a <main>
-  4a:	c6 c0       	rjmp	.+396    	; 0x1d8 <_exit>
+  48:	c8 d2       	rcall	.+1424   	; 0x5da <main>
+  4a:	db c2       	rjmp	.+1462   	; 0x602 <_exit>
 
 0000004c <__bad_interrupt>:
   4c:	d9 cf       	rjmp	.-78     	; 0x0 <__vectors>
@@ -81,397 +81,1550 @@ Disassembly of section .text:
 
 int i=4;
 
-void d_eight(int digit)
+void d_eight(int module, int digit)
 {
-	if(digit == 1)
-  4e:	81 30       	cpi	r24, 0x01	; 1
-  50:	91 05       	cpc	r25, r1
-  52:	61 f4       	brne	.+24     	; 0x6c <d_eight+0x1e>
+	if (digit == 0)
+  4e:	61 15       	cp	r22, r1
+  50:	71 05       	cpc	r23, r1
+  52:	a9 f4       	brne	.+42     	; 0x7e <d_eight+0x30>
 	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-  54:	ad 98       	cbi	0x15, 5	; 21
-		PORTB &= ~(1 << PB7);
-  56:	c7 98       	cbi	0x18, 7	; 24
-		PORTD &= ~(1 << PD3);
-  58:	93 98       	cbi	0x12, 3	; 18
-		// set selected digit high
-		PORTB |= (1 << PB6);
-  5a:	c6 9a       	sbi	0x18, 6	; 24
+		if (module == 0)
+  54:	00 97       	sbiw	r24, 0x00	; 0
+  56:	29 f4       	brne	.+10     	; 0x62 <d_eight+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+  58:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+  5a:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+  5c:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+  5e:	c6 9a       	sbi	0x18, 6	; 24
+  60:	06 c0       	rjmp	.+12     	; 0x6e <d_eight+0x20>
+		}
+		if (module == 1)
+  62:	01 97       	sbiw	r24, 0x01	; 1
+  64:	21 f4       	brne	.+8      	; 0x6e <d_eight+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+  66:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+  68:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+  6a:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+  6c:	c3 9a       	sbi	0x18, 3	; 24
+		}
 		
 		PORTC |= (1 << PC3); // A1
-  5c:	ab 9a       	sbi	0x15, 3	; 21
+  6e:	ab 9a       	sbi	0x15, 3	; 21
 		PORTC |= (1 << PC1); // B1
-  5e:	a9 9a       	sbi	0x15, 1	; 21
+  70:	a9 9a       	sbi	0x15, 1	; 21
 		PORTD |= (1 << PD2); // C1
-  60:	92 9a       	sbi	0x12, 2	; 18
+  72:	92 9a       	sbi	0x12, 2	; 18
 		PORTB |= (1 << PB0); // D1
-  62:	c0 9a       	sbi	0x18, 0	; 24
+  74:	c0 9a       	sbi	0x18, 0	; 24
 		PORTD |= (1 << PD7); // E1
-  64:	97 9a       	sbi	0x12, 7	; 18
+  76:	97 9a       	sbi	0x12, 7	; 18
 		PORTC |= (1 << PC2); // F1
-  66:	aa 9a       	sbi	0x15, 2	; 21
+  78:	aa 9a       	sbi	0x15, 2	; 21
 		PORTC |= (1 << PC4); // G1
-  68:	ac 9a       	sbi	0x15, 4	; 21
-  6a:	1e c0       	rjmp	.+60     	; 0xa8 <d_eight+0x5a>
+  7a:	ac 9a       	sbi	0x15, 4	; 21
+  7c:	08 95       	ret
 	}
-	if (digit == 2)
-  6c:	82 30       	cpi	r24, 0x02	; 2
-  6e:	91 05       	cpc	r25, r1
-  70:	61 f4       	brne	.+24     	; 0x8a <d_eight+0x3c>
-	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-  72:	ad 98       	cbi	0x15, 5	; 21
-		PORTD &= ~(1 << PD3);
-  74:	93 98       	cbi	0x12, 3	; 18
-		PORTB &= ~(1 << PB6);
-  76:	c6 98       	cbi	0x18, 6	; 24
-		// set selected digit high
-		PORTB |= (1 << PB7);
-  78:	c7 9a       	sbi	0x18, 7	; 24
-		
-		PORTB |= (1 << PB2); // A2
-  7a:	c2 9a       	sbi	0x18, 2	; 24
-		PORTD |= (1 << PD1); // B2
-  7c:	91 9a       	sbi	0x12, 1	; 18
-		PORTD |= (1 << PD4); // C2
-  7e:	94 9a       	sbi	0x12, 4	; 18
-		PORTD |= (1 << PD5); // D2
-  80:	95 9a       	sbi	0x12, 5	; 18
-		PORTD |= (1 << PD6); // E2
-  82:	96 9a       	sbi	0x12, 6	; 18
-		PORTD |= (1 << PD0); // F2
-  84:	90 9a       	sbi	0x12, 0	; 18
-		PORTC |= (1 << PC0); // G2
-  86:	a8 9a       	sbi	0x15, 0	; 21
-  88:	08 95       	ret
-	}
-	if (digit == 3)
-  8a:	83 30       	cpi	r24, 0x03	; 3
-  8c:	91 05       	cpc	r25, r1
-  8e:	61 f4       	brne	.+24     	; 0xa8 <d_eight+0x5a>
-	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-  90:	ad 98       	cbi	0x15, 5	; 21
-		PORTB &= ~(1 << PB7);
-  92:	c7 98       	cbi	0x18, 7	; 24
-		PORTD &= ~(1 << PB6);
-  94:	96 98       	cbi	0x12, 6	; 18
-		// set selected digit high
-		PORTB |= (1 << PD3);
-  96:	c3 9a       	sbi	0x18, 3	; 24
-		
-		PORTC |= (1 << PC3); // A1
-  98:	ab 9a       	sbi	0x15, 3	; 21
-		PORTC |= (1 << PC1); // B1
-  9a:	a9 9a       	sbi	0x15, 1	; 21
-		PORTD |= (1 << PD2); // C1
-  9c:	92 9a       	sbi	0x12, 2	; 18
-		PORTB |= (1 << PB0); // D1
-  9e:	c0 9a       	sbi	0x18, 0	; 24
-		PORTD |= (1 << PD7); // E1
-  a0:	97 9a       	sbi	0x12, 7	; 18
-		PORTC |= (1 << PC2); // F1
-  a2:	aa 9a       	sbi	0x15, 2	; 21
-		PORTC |= (1 << PC4); // G1
-  a4:	ac 9a       	sbi	0x15, 4	; 21
-  a6:	08 95       	ret
-	}
-	if (digit == 4)
-  a8:	04 97       	sbiw	r24, 0x04	; 4
-  aa:	59 f4       	brne	.+22     	; 0xc2 <d_eight+0x74>
-	{
-		// set not wanted digits low
-		PORTB &= ~(1 << PB7);
-  ac:	c7 98       	cbi	0x18, 7	; 24
-		PORTD &= ~(1 << PD3);
-  ae:	93 98       	cbi	0x12, 3	; 18
-		PORTB &= ~(1 << PB6);
-  b0:	c6 98       	cbi	0x18, 6	; 24
-		// set selected digit high
-		PORTC |= (1 << PC5);
-  b2:	ad 9a       	sbi	0x15, 5	; 21
-		
-		PORTB |= (1 << PB2); // A2
-  b4:	c2 9a       	sbi	0x18, 2	; 24
-		PORTD |= (1 << PD1); // B2
-  b6:	91 9a       	sbi	0x12, 1	; 18
-		PORTD |= (1 << PD4); // C2
-  b8:	94 9a       	sbi	0x12, 4	; 18
-		PORTD |= (1 << PD5); // D2
-  ba:	95 9a       	sbi	0x12, 5	; 18
-		PORTD |= (1 << PD6); // E2
-  bc:	96 9a       	sbi	0x12, 6	; 18
-		PORTD |= (1 << PD0); // F2
-  be:	90 9a       	sbi	0x12, 0	; 18
-		PORTC |= (1 << PC0); // G2
-  c0:	a8 9a       	sbi	0x15, 0	; 21
-  c2:	08 95       	ret
-
-000000c4 <resetModuleDigit>:
-	}
-}
-
-void resetModuleDigit(int digit)
-{
 	if (digit == 1)
-  c4:	81 30       	cpi	r24, 0x01	; 1
-  c6:	91 05       	cpc	r25, r1
-  c8:	61 f4       	brne	.+24     	; 0xe2 <resetModuleDigit+0x1e>
+  7e:	61 30       	cpi	r22, 0x01	; 1
+  80:	71 05       	cpc	r23, r1
+  82:	a1 f4       	brne	.+40     	; 0xac <d_eight+0x5e>
 	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-  ca:	ad 98       	cbi	0x15, 5	; 21
-		PORTB &= ~(1 << PB7);
-  cc:	c7 98       	cbi	0x18, 7	; 24
-		PORTD &= ~(1 << PD3);
-  ce:	93 98       	cbi	0x12, 3	; 18
-		// set selected digit high
-		PORTB |= (1 << PB6);
-  d0:	c6 9a       	sbi	0x18, 6	; 24
+		if (module == 0)
+  84:	00 97       	sbiw	r24, 0x00	; 0
+  86:	29 f4       	brne	.+10     	; 0x92 <d_eight+0x44>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+  88:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+  8a:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+  8c:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+  8e:	c7 9a       	sbi	0x18, 7	; 24
+  90:	06 c0       	rjmp	.+12     	; 0x9e <d_eight+0x50>
+		}
+		if (module == 1)
+  92:	01 97       	sbiw	r24, 0x01	; 1
+  94:	21 f4       	brne	.+8      	; 0x9e <d_eight+0x50>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+  96:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+  98:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+  9a:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+  9c:	ad 9a       	sbi	0x15, 5	; 21
+		}
 		
-		PORTC &= ~(1 << PC3); // A1
-  d2:	ab 98       	cbi	0x15, 3	; 21
-		PORTC &= ~(1 << PC1); // B1
-  d4:	a9 98       	cbi	0x15, 1	; 21
-		PORTD &= ~(1 << PD2); // C1
-  d6:	92 98       	cbi	0x12, 2	; 18
-		PORTB &= ~(1 << PB0); // D1
-  d8:	c0 98       	cbi	0x18, 0	; 24
-		PORTD &= ~(1 << PD7); // E1
-  da:	97 98       	cbi	0x12, 7	; 18
-		PORTC &= ~(1 << PC2); // F1
-  dc:	aa 98       	cbi	0x15, 2	; 21
-		PORTC &= ~(1 << PC4); // G1
-  de:	ac 98       	cbi	0x15, 4	; 21
-  e0:	1e c0       	rjmp	.+60     	; 0x11e <resetModuleDigit+0x5a>
-	}
-	if (digit == 2)
-  e2:	82 30       	cpi	r24, 0x02	; 2
-  e4:	91 05       	cpc	r25, r1
-  e6:	61 f4       	brne	.+24     	; 0x100 <resetModuleDigit+0x3c>
-	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-  e8:	ad 98       	cbi	0x15, 5	; 21
-		PORTD &= ~(1 << PD3);
-  ea:	93 98       	cbi	0x12, 3	; 18
-		PORTB &= ~(1 << PB6);
-  ec:	c6 98       	cbi	0x18, 6	; 24
-		// set selected digit high
-		PORTB |= (1 << PB7);
-  ee:	c7 9a       	sbi	0x18, 7	; 24
-				
-		PORTB &= ~(1 << PB2); // A2
-  f0:	c2 98       	cbi	0x18, 2	; 24
-		PORTD &= ~(1 << PD1); // B2
-  f2:	91 98       	cbi	0x12, 1	; 18
-		PORTD &= ~(1 << PD4); // C2
-  f4:	94 98       	cbi	0x12, 4	; 18
-		PORTD &= ~(1 << PD5); // D2
-  f6:	95 98       	cbi	0x12, 5	; 18
-		PORTD &= ~(1 << PD6); // E2
-  f8:	96 98       	cbi	0x12, 6	; 18
-		PORTD &= ~(1 << PD0); // F2
-  fa:	90 98       	cbi	0x12, 0	; 18
-		PORTC &= ~(1 << PC0); // G2
-  fc:	a8 98       	cbi	0x15, 0	; 21
-  fe:	08 95       	ret
-	}
-	if (digit == 3)
- 100:	83 30       	cpi	r24, 0x03	; 3
- 102:	91 05       	cpc	r25, r1
- 104:	61 f4       	brne	.+24     	; 0x11e <resetModuleDigit+0x5a>
-	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
- 106:	ad 98       	cbi	0x15, 5	; 21
-		PORTB &= ~(1 << PB7);
- 108:	c7 98       	cbi	0x18, 7	; 24
-		PORTD &= ~(1 << PB6);
- 10a:	96 98       	cbi	0x12, 6	; 18
-		// set selected digit high
-		PORTB |= (1 << PD3);
- 10c:	c3 9a       	sbi	0x18, 3	; 24
-		
-		PORTC &= ~(1 << PC3); // A1
- 10e:	ab 98       	cbi	0x15, 3	; 21
-		PORTC &= ~(1 << PC1); // B1
- 110:	a9 98       	cbi	0x15, 1	; 21
-		PORTD &= ~(1 << PD2); // C1
- 112:	92 98       	cbi	0x12, 2	; 18
-		PORTB &= ~(1 << PB0); // D1
- 114:	c0 98       	cbi	0x18, 0	; 24
-		PORTD &= ~(1 << PD7); // E1
- 116:	97 98       	cbi	0x12, 7	; 18
-		PORTC &= ~(1 << PC2); // F1
- 118:	aa 98       	cbi	0x15, 2	; 21
-		PORTC &= ~(1 << PC4); // G1
- 11a:	ac 98       	cbi	0x15, 4	; 21
- 11c:	08 95       	ret
-	}
-	if (digit == 4)
- 11e:	04 97       	sbiw	r24, 0x04	; 4
- 120:	59 f4       	brne	.+22     	; 0x138 <resetModuleDigit+0x74>
-	{
-		// set not wanted digits low
-		PORTB &= ~(1 << PB7);
- 122:	c7 98       	cbi	0x18, 7	; 24
-		PORTD &= ~(1 << PD3);
- 124:	93 98       	cbi	0x12, 3	; 18
-		PORTB &= ~(1 << PB6);
- 126:	c6 98       	cbi	0x18, 6	; 24
-		// set selected digit high
-		PORTC |= (1 << PC5);
- 128:	ad 9a       	sbi	0x15, 5	; 21
-		
-		PORTB &= ~(1 << PB2); // A2
- 12a:	c2 98       	cbi	0x18, 2	; 24
-		PORTD &= ~(1 << PD1); // B2
- 12c:	91 98       	cbi	0x12, 1	; 18
-		PORTD &= ~(1 << PD4); // C2
- 12e:	94 98       	cbi	0x12, 4	; 18
-		PORTD &= ~(1 << PD5); // D2
- 130:	95 98       	cbi	0x12, 5	; 18
-		PORTD &= ~(1 << PD6); // E2
- 132:	96 98       	cbi	0x12, 6	; 18
-		PORTD &= ~(1 << PD0); // F2
- 134:	90 98       	cbi	0x12, 0	; 18
-		PORTC &= ~(1 << PC0); // G2
- 136:	a8 98       	cbi	0x15, 0	; 21
- 138:	08 95       	ret
+		PORTB |= (1 << PB2); // A2
+  9e:	c2 9a       	sbi	0x18, 2	; 24
+		PORTD |= (1 << PD1); // B2
+  a0:	91 9a       	sbi	0x12, 1	; 18
+		PORTD |= (1 << PD4); // C2
+  a2:	94 9a       	sbi	0x12, 4	; 18
+		PORTD |= (1 << PD5); // D2
+  a4:	95 9a       	sbi	0x12, 5	; 18
+		PORTD |= (1 << PD6); // E2
+  a6:	96 9a       	sbi	0x12, 6	; 18
+		PORTD |= (1 << PD0); // F2
+  a8:	90 9a       	sbi	0x12, 0	; 18
+		PORTC |= (1 << PC0); // G2
+  aa:	a8 9a       	sbi	0x15, 0	; 21
+  ac:	08 95       	ret
 
-0000013a <main>:
+000000ae <d_one>:
+	}
 }
 
-int main(void)
+void d_one(int module, int digit)
 {
-	/* Ausgänge setzen. */
-	DDRC |= (1 << PC5); // 1. Modul 2. Ziffer
- 13a:	a5 9a       	sbi	0x14, 5	; 20
-	DDRB |= (1 << PB7); // 2. Modul 2. Ziffer
- 13c:	bf 9a       	sbi	0x17, 7	; 23
-	DDRD |= (1 << PD3); // 1. Modul 1. Ziffer
- 13e:	8b 9a       	sbi	0x11, 3	; 17
-	DDRB |= (1 << PB6); // 2. Modul 1. Ziffer
- 140:	be 9a       	sbi	0x17, 6	; 23
-
-	DDRB |= (1 << PB2); // A2
- 142:	ba 9a       	sbi	0x17, 2	; 23
-	DDRD |= (1 << PD1); // B2
- 144:	89 9a       	sbi	0x11, 1	; 17
-	DDRD |= (1 << PD4); // C2
- 146:	8c 9a       	sbi	0x11, 4	; 17
-	DDRD |= (1 << PD5); // D2
- 148:	8d 9a       	sbi	0x11, 5	; 17
-	DDRD |= (1 << PD6); // E2
- 14a:	8e 9a       	sbi	0x11, 6	; 17
-	DDRD |= (1 << PD0); // F2
- 14c:	88 9a       	sbi	0x11, 0	; 17
-	DDRC |= (1 << PC0); // G2
- 14e:	a0 9a       	sbi	0x14, 0	; 20
-	
-	DDRC |= (1 << PC3); // A1
- 150:	a3 9a       	sbi	0x14, 3	; 20
-	DDRC |= (1 << PC1); // B1
- 152:	a1 9a       	sbi	0x14, 1	; 20
-	DDRD |= (1 << PD2); // C1
- 154:	8a 9a       	sbi	0x11, 2	; 17
-	DDRB |= (1 << PB0); // D1
- 156:	b8 9a       	sbi	0x17, 0	; 23
-	DDRD |= (1 << PD7); // E1
- 158:	8f 9a       	sbi	0x11, 7	; 17
-	DDRC |= (1 << PC2); // F1
- 15a:	a2 9a       	sbi	0x14, 2	; 20
-	DDRC |= (1 << PC4); // G1
- 15c:	a4 9a       	sbi	0x14, 4	; 20
-	
-	while (1)
+	if (digit == 0)
+  ae:	61 15       	cp	r22, r1
+  b0:	71 05       	cpc	r23, r1
+  b2:	81 f4       	brne	.+32     	; 0xd4 <d_one+0x26>
 	{
-		d_eight(1);
- 15e:	81 e0       	ldi	r24, 0x01	; 1
- 160:	90 e0       	ldi	r25, 0x00	; 0
- 162:	75 df       	rcall	.-278    	; 0x4e <d_eight>
+		if (module == 0)
+  b4:	00 97       	sbiw	r24, 0x00	; 0
+  b6:	29 f4       	brne	.+10     	; 0xc2 <d_one+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+  b8:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+  ba:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+  bc:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+  be:	c6 9a       	sbi	0x18, 6	; 24
+  c0:	06 c0       	rjmp	.+12     	; 0xce <d_one+0x20>
+		}
+		if (module == 1)
+  c2:	01 97       	sbiw	r24, 0x01	; 1
+  c4:	21 f4       	brne	.+8      	; 0xce <d_one+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+  c6:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+  c8:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+  ca:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+  cc:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC |= (1 << PC1); // B1
+  ce:	a9 9a       	sbi	0x15, 1	; 21
+		PORTD |= (1 << PD2); // C1
+  d0:	92 9a       	sbi	0x12, 2	; 18
+  d2:	08 95       	ret
+	}
+	if (digit == 1)
+  d4:	61 30       	cpi	r22, 0x01	; 1
+  d6:	71 05       	cpc	r23, r1
+  d8:	79 f4       	brne	.+30     	; 0xf8 <d_one+0x4a>
+	{
+		if (module == 0)
+  da:	00 97       	sbiw	r24, 0x00	; 0
+  dc:	29 f4       	brne	.+10     	; 0xe8 <d_one+0x3a>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+  de:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+  e0:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+  e2:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+  e4:	c7 9a       	sbi	0x18, 7	; 24
+  e6:	06 c0       	rjmp	.+12     	; 0xf4 <d_one+0x46>
+		}
+		if (module == 1)
+  e8:	01 97       	sbiw	r24, 0x01	; 1
+  ea:	21 f4       	brne	.+8      	; 0xf4 <d_one+0x46>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+  ec:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+  ee:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+  f0:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+  f2:	ad 9a       	sbi	0x15, 5	; 21
+		}
+
+		PORTD |= (1 << PD1); // B2
+  f4:	91 9a       	sbi	0x12, 1	; 18
+		PORTD |= (1 << PD4); // C2
+  f6:	94 9a       	sbi	0x12, 4	; 18
+  f8:	08 95       	ret
+
+000000fa <d_two>:
+	}
+}
+
+void d_two(int module, int digit)
+{
+	if (digit == 0)
+  fa:	61 15       	cp	r22, r1
+  fc:	71 05       	cpc	r23, r1
+  fe:	99 f4       	brne	.+38     	; 0x126 <d_two+0x2c>
+	{
+		if (module == 0)
+ 100:	00 97       	sbiw	r24, 0x00	; 0
+ 102:	29 f4       	brne	.+10     	; 0x10e <d_two+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 104:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 106:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 108:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+ 10a:	c6 9a       	sbi	0x18, 6	; 24
+ 10c:	06 c0       	rjmp	.+12     	; 0x11a <d_two+0x20>
+		}
+		if (module == 1)
+ 10e:	01 97       	sbiw	r24, 0x01	; 1
+ 110:	21 f4       	brne	.+8      	; 0x11a <d_two+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 112:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 114:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+ 116:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+ 118:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC |= (1 << PC3); // A1
+ 11a:	ab 9a       	sbi	0x15, 3	; 21
+		PORTC |= (1 << PC1); // B1
+ 11c:	a9 9a       	sbi	0x15, 1	; 21
+		PORTB |= (1 << PB0); // D1
+ 11e:	c0 9a       	sbi	0x18, 0	; 24
+		PORTD |= (1 << PD7); // E1
+ 120:	97 9a       	sbi	0x12, 7	; 18
+		PORTC |= (1 << PC4); // G1
+ 122:	ac 9a       	sbi	0x15, 4	; 21
+ 124:	08 95       	ret
+	}
+	if (digit == 1)
+ 126:	61 30       	cpi	r22, 0x01	; 1
+ 128:	71 05       	cpc	r23, r1
+ 12a:	91 f4       	brne	.+36     	; 0x150 <d_two+0x56>
+	{
+		if (module == 0)
+ 12c:	00 97       	sbiw	r24, 0x00	; 0
+ 12e:	29 f4       	brne	.+10     	; 0x13a <d_two+0x40>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 130:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+ 132:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 134:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+ 136:	c7 9a       	sbi	0x18, 7	; 24
+ 138:	06 c0       	rjmp	.+12     	; 0x146 <d_two+0x4c>
+		}
+		if (module == 1)
+ 13a:	01 97       	sbiw	r24, 0x01	; 1
+ 13c:	21 f4       	brne	.+8      	; 0x146 <d_two+0x4c>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+ 13e:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 140:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 142:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+ 144:	ad 9a       	sbi	0x15, 5	; 21
+		}
+		
+		PORTB |= (1 << PB2); // A2
+ 146:	c2 9a       	sbi	0x18, 2	; 24
+		PORTD |= (1 << PD1); // B2
+ 148:	91 9a       	sbi	0x12, 1	; 18
+		PORTD |= (1 << PD5); // D2
+ 14a:	95 9a       	sbi	0x12, 5	; 18
+		PORTD |= (1 << PD6); // E2
+ 14c:	96 9a       	sbi	0x12, 6	; 18
+		PORTC |= (1 << PC0); // G2
+ 14e:	a8 9a       	sbi	0x15, 0	; 21
+ 150:	08 95       	ret
+
+00000152 <d_three>:
+	}
+}
+
+void d_three(int module, int digit)
+{
+	if (digit == 0)
+ 152:	61 15       	cp	r22, r1
+ 154:	71 05       	cpc	r23, r1
+ 156:	99 f4       	brne	.+38     	; 0x17e <d_three+0x2c>
+	{
+		if (module == 0)
+ 158:	00 97       	sbiw	r24, 0x00	; 0
+ 15a:	29 f4       	brne	.+10     	; 0x166 <d_three+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 15c:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 15e:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 160:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+ 162:	c6 9a       	sbi	0x18, 6	; 24
+ 164:	06 c0       	rjmp	.+12     	; 0x172 <d_three+0x20>
+		}
+		if (module == 1)
+ 166:	01 97       	sbiw	r24, 0x01	; 1
+ 168:	21 f4       	brne	.+8      	; 0x172 <d_three+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 16a:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 16c:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+ 16e:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+ 170:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC |= (1 << PC3); // A1
+ 172:	ab 9a       	sbi	0x15, 3	; 21
+		PORTC |= (1 << PC1); // B1
+ 174:	a9 9a       	sbi	0x15, 1	; 21
+		PORTD |= (1 << PD2); // C1
+ 176:	92 9a       	sbi	0x12, 2	; 18
+		PORTB |= (1 << PB0); // D1
+ 178:	c0 9a       	sbi	0x18, 0	; 24
+		PORTC |= (1 << PC4); // G1
+ 17a:	ac 9a       	sbi	0x15, 4	; 21
+ 17c:	08 95       	ret
+	}
+	if (digit == 1)
+ 17e:	61 30       	cpi	r22, 0x01	; 1
+ 180:	71 05       	cpc	r23, r1
+ 182:	91 f4       	brne	.+36     	; 0x1a8 <d_three+0x56>
+	{
+		if (module == 0)
+ 184:	00 97       	sbiw	r24, 0x00	; 0
+ 186:	29 f4       	brne	.+10     	; 0x192 <d_three+0x40>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 188:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+ 18a:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 18c:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+ 18e:	c7 9a       	sbi	0x18, 7	; 24
+ 190:	06 c0       	rjmp	.+12     	; 0x19e <d_three+0x4c>
+		}
+		if (module == 1)
+ 192:	01 97       	sbiw	r24, 0x01	; 1
+ 194:	21 f4       	brne	.+8      	; 0x19e <d_three+0x4c>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+ 196:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 198:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 19a:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+ 19c:	ad 9a       	sbi	0x15, 5	; 21
+		}
+		
+		PORTB |= (1 << PB2); // A2
+ 19e:	c2 9a       	sbi	0x18, 2	; 24
+		PORTD |= (1 << PD1); // B2
+ 1a0:	91 9a       	sbi	0x12, 1	; 18
+		PORTD |= (1 << PD4); // C2
+ 1a2:	94 9a       	sbi	0x12, 4	; 18
+		PORTD |= (1 << PD5); // D2
+ 1a4:	95 9a       	sbi	0x12, 5	; 18
+		PORTC |= (1 << PC0); // G2
+ 1a6:	a8 9a       	sbi	0x15, 0	; 21
+ 1a8:	08 95       	ret
+
+000001aa <d_four>:
+	}
+}
+
+void d_four(int module, int digit)
+{
+	if (digit == 0)
+ 1aa:	61 15       	cp	r22, r1
+ 1ac:	71 05       	cpc	r23, r1
+ 1ae:	91 f4       	brne	.+36     	; 0x1d4 <d_four+0x2a>
+	{
+		if (module == 0)
+ 1b0:	00 97       	sbiw	r24, 0x00	; 0
+ 1b2:	29 f4       	brne	.+10     	; 0x1be <d_four+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 1b4:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 1b6:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 1b8:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+ 1ba:	c6 9a       	sbi	0x18, 6	; 24
+ 1bc:	06 c0       	rjmp	.+12     	; 0x1ca <d_four+0x20>
+		}
+		if (module == 1)
+ 1be:	01 97       	sbiw	r24, 0x01	; 1
+ 1c0:	21 f4       	brne	.+8      	; 0x1ca <d_four+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 1c2:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 1c4:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+ 1c6:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+ 1c8:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC |= (1 << PC1); // B1
+ 1ca:	a9 9a       	sbi	0x15, 1	; 21
+		PORTD |= (1 << PD2); // C1
+ 1cc:	92 9a       	sbi	0x12, 2	; 18
+		PORTC |= (1 << PC2); // F1
+ 1ce:	aa 9a       	sbi	0x15, 2	; 21
+		PORTC |= (1 << PC4); // G1
+ 1d0:	ac 9a       	sbi	0x15, 4	; 21
+ 1d2:	08 95       	ret
+	}
+	if (digit == 1)
+ 1d4:	61 30       	cpi	r22, 0x01	; 1
+ 1d6:	71 05       	cpc	r23, r1
+ 1d8:	89 f4       	brne	.+34     	; 0x1fc <d_four+0x52>
+	{
+		if (module == 0)
+ 1da:	00 97       	sbiw	r24, 0x00	; 0
+ 1dc:	29 f4       	brne	.+10     	; 0x1e8 <d_four+0x3e>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 1de:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+ 1e0:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 1e2:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+ 1e4:	c7 9a       	sbi	0x18, 7	; 24
+ 1e6:	06 c0       	rjmp	.+12     	; 0x1f4 <d_four+0x4a>
+		}
+		if (module == 1)
+ 1e8:	01 97       	sbiw	r24, 0x01	; 1
+ 1ea:	21 f4       	brne	.+8      	; 0x1f4 <d_four+0x4a>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+ 1ec:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 1ee:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 1f0:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+ 1f2:	ad 9a       	sbi	0x15, 5	; 21
+		}
+		
+		PORTD |= (1 << PD1); // B2
+ 1f4:	91 9a       	sbi	0x12, 1	; 18
+		PORTD |= (1 << PD4); // C2
+ 1f6:	94 9a       	sbi	0x12, 4	; 18
+		PORTD |= (1 << PD0); // F2
+ 1f8:	90 9a       	sbi	0x12, 0	; 18
+		PORTC |= (1 << PC0); // G2
+ 1fa:	a8 9a       	sbi	0x15, 0	; 21
+ 1fc:	08 95       	ret
+
+000001fe <d_five>:
+	}
+}
+
+void d_five(int module, int digit)
+{
+	if (digit == 0)
+ 1fe:	61 15       	cp	r22, r1
+ 200:	71 05       	cpc	r23, r1
+ 202:	99 f4       	brne	.+38     	; 0x22a <d_five+0x2c>
+	{
+		if (module == 0)
+ 204:	00 97       	sbiw	r24, 0x00	; 0
+ 206:	29 f4       	brne	.+10     	; 0x212 <d_five+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 208:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 20a:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 20c:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+ 20e:	c6 9a       	sbi	0x18, 6	; 24
+ 210:	06 c0       	rjmp	.+12     	; 0x21e <d_five+0x20>
+		}
+		if (module == 1)
+ 212:	01 97       	sbiw	r24, 0x01	; 1
+ 214:	21 f4       	brne	.+8      	; 0x21e <d_five+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 216:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 218:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+ 21a:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+ 21c:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC |= (1 << PC3); // A1
+ 21e:	ab 9a       	sbi	0x15, 3	; 21
+		PORTD |= (1 << PD2); // C1
+ 220:	92 9a       	sbi	0x12, 2	; 18
+		PORTB |= (1 << PB0); // D1
+ 222:	c0 9a       	sbi	0x18, 0	; 24
+		PORTC |= (1 << PC2); // F1
+ 224:	aa 9a       	sbi	0x15, 2	; 21
+		PORTC |= (1 << PC4); // G1
+ 226:	ac 9a       	sbi	0x15, 4	; 21
+ 228:	08 95       	ret
+	}
+	if (digit == 1)
+ 22a:	61 30       	cpi	r22, 0x01	; 1
+ 22c:	71 05       	cpc	r23, r1
+ 22e:	91 f4       	brne	.+36     	; 0x254 <d_five+0x56>
+	{
+		if (module == 0)
+ 230:	00 97       	sbiw	r24, 0x00	; 0
+ 232:	29 f4       	brne	.+10     	; 0x23e <d_five+0x40>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 234:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+ 236:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 238:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+ 23a:	c7 9a       	sbi	0x18, 7	; 24
+ 23c:	06 c0       	rjmp	.+12     	; 0x24a <d_five+0x4c>
+		}
+		if (module == 1)
+ 23e:	01 97       	sbiw	r24, 0x01	; 1
+ 240:	21 f4       	brne	.+8      	; 0x24a <d_five+0x4c>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+ 242:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 244:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 246:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+ 248:	ad 9a       	sbi	0x15, 5	; 21
+		}
+		
+		PORTB |= (1 << PB2); // A2
+ 24a:	c2 9a       	sbi	0x18, 2	; 24
+		PORTD |= (1 << PD4); // C2
+ 24c:	94 9a       	sbi	0x12, 4	; 18
+		PORTD |= (1 << PD5); // D2
+ 24e:	95 9a       	sbi	0x12, 5	; 18
+		PORTD |= (1 << PD0); // F2
+ 250:	90 9a       	sbi	0x12, 0	; 18
+		PORTC |= (1 << PC0); // G2
+ 252:	a8 9a       	sbi	0x15, 0	; 21
+ 254:	08 95       	ret
+
+00000256 <d_six>:
+	}
+}
+
+void d_six(int module, int digit)
+{
+	if (digit == 0)
+ 256:	61 15       	cp	r22, r1
+ 258:	71 05       	cpc	r23, r1
+ 25a:	a1 f4       	brne	.+40     	; 0x284 <d_six+0x2e>
+	{
+		if (module == 0)
+ 25c:	00 97       	sbiw	r24, 0x00	; 0
+ 25e:	29 f4       	brne	.+10     	; 0x26a <d_six+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 260:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 262:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 264:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+ 266:	c6 9a       	sbi	0x18, 6	; 24
+ 268:	06 c0       	rjmp	.+12     	; 0x276 <d_six+0x20>
+		}
+		if (module == 1)
+ 26a:	01 97       	sbiw	r24, 0x01	; 1
+ 26c:	21 f4       	brne	.+8      	; 0x276 <d_six+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 26e:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 270:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+ 272:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+ 274:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC |= (1 << PC3); // A1
+ 276:	ab 9a       	sbi	0x15, 3	; 21
+		PORTD |= (1 << PD2); // C1
+ 278:	92 9a       	sbi	0x12, 2	; 18
+		PORTB |= (1 << PB0); // D1
+ 27a:	c0 9a       	sbi	0x18, 0	; 24
+		PORTD |= (1 << PD7); // E1
+ 27c:	97 9a       	sbi	0x12, 7	; 18
+		PORTC |= (1 << PC2); // F1
+ 27e:	aa 9a       	sbi	0x15, 2	; 21
+		PORTC |= (1 << PC4); // G1
+ 280:	ac 9a       	sbi	0x15, 4	; 21
+ 282:	08 95       	ret
+	}
+	if (digit == 1)
+ 284:	61 30       	cpi	r22, 0x01	; 1
+ 286:	71 05       	cpc	r23, r1
+ 288:	99 f4       	brne	.+38     	; 0x2b0 <d_six+0x5a>
+	{
+		if (module == 0)
+ 28a:	00 97       	sbiw	r24, 0x00	; 0
+ 28c:	29 f4       	brne	.+10     	; 0x298 <d_six+0x42>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 28e:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+ 290:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 292:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+ 294:	c7 9a       	sbi	0x18, 7	; 24
+ 296:	06 c0       	rjmp	.+12     	; 0x2a4 <d_six+0x4e>
+		}
+		if (module == 1)
+ 298:	01 97       	sbiw	r24, 0x01	; 1
+ 29a:	21 f4       	brne	.+8      	; 0x2a4 <d_six+0x4e>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+ 29c:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 29e:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 2a0:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+ 2a2:	ad 9a       	sbi	0x15, 5	; 21
+		}
+		
+		PORTB |= (1 << PB2); // A2
+ 2a4:	c2 9a       	sbi	0x18, 2	; 24
+		PORTD |= (1 << PD4); // C2
+ 2a6:	94 9a       	sbi	0x12, 4	; 18
+		PORTD |= (1 << PD5); // D2
+ 2a8:	95 9a       	sbi	0x12, 5	; 18
+		PORTD |= (1 << PD6); // E2
+ 2aa:	96 9a       	sbi	0x12, 6	; 18
+		PORTD |= (1 << PD0); // F2
+ 2ac:	90 9a       	sbi	0x12, 0	; 18
+		PORTC |= (1 << PC0); // G2
+ 2ae:	a8 9a       	sbi	0x15, 0	; 21
+ 2b0:	08 95       	ret
+
+000002b2 <d_seven>:
+	}
+}
+
+void d_seven(int module, int digit)
+{
+	if (digit == 0)
+ 2b2:	61 15       	cp	r22, r1
+ 2b4:	71 05       	cpc	r23, r1
+ 2b6:	89 f4       	brne	.+34     	; 0x2da <d_seven+0x28>
+	{
+		if (module == 0)
+ 2b8:	00 97       	sbiw	r24, 0x00	; 0
+ 2ba:	29 f4       	brne	.+10     	; 0x2c6 <d_seven+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 2bc:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 2be:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 2c0:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+ 2c2:	c6 9a       	sbi	0x18, 6	; 24
+ 2c4:	06 c0       	rjmp	.+12     	; 0x2d2 <d_seven+0x20>
+		}
+		if (module == 1)
+ 2c6:	01 97       	sbiw	r24, 0x01	; 1
+ 2c8:	21 f4       	brne	.+8      	; 0x2d2 <d_seven+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 2ca:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 2cc:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+ 2ce:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+ 2d0:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC |= (1 << PC3); // A1
+ 2d2:	ab 9a       	sbi	0x15, 3	; 21
+		PORTC |= (1 << PC1); // B1
+ 2d4:	a9 9a       	sbi	0x15, 1	; 21
+		PORTD |= (1 << PD2); // C1
+ 2d6:	92 9a       	sbi	0x12, 2	; 18
+ 2d8:	08 95       	ret
+	}
+	if (digit == 1)
+ 2da:	61 30       	cpi	r22, 0x01	; 1
+ 2dc:	71 05       	cpc	r23, r1
+ 2de:	81 f4       	brne	.+32     	; 0x300 <d_seven+0x4e>
+	{
+		if (module == 0)
+ 2e0:	00 97       	sbiw	r24, 0x00	; 0
+ 2e2:	29 f4       	brne	.+10     	; 0x2ee <d_seven+0x3c>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 2e4:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+ 2e6:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 2e8:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+ 2ea:	c7 9a       	sbi	0x18, 7	; 24
+ 2ec:	06 c0       	rjmp	.+12     	; 0x2fa <d_seven+0x48>
+		}
+		if (module == 1)
+ 2ee:	01 97       	sbiw	r24, 0x01	; 1
+ 2f0:	21 f4       	brne	.+8      	; 0x2fa <d_seven+0x48>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+ 2f2:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 2f4:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 2f6:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+ 2f8:	ad 9a       	sbi	0x15, 5	; 21
+		}
+		
+		PORTB |= (1 << PB2); // A2
+ 2fa:	c2 9a       	sbi	0x18, 2	; 24
+		PORTD |= (1 << PD1); // B2
+ 2fc:	91 9a       	sbi	0x12, 1	; 18
+		PORTD |= (1 << PD4); // C2
+ 2fe:	94 9a       	sbi	0x12, 4	; 18
+ 300:	08 95       	ret
+
+00000302 <d_nine>:
+	}
+}
+
+void d_nine(int module, int digit)
+{
+	if (digit == 0)
+ 302:	61 15       	cp	r22, r1
+ 304:	71 05       	cpc	r23, r1
+ 306:	99 f4       	brne	.+38     	; 0x32e <d_nine+0x2c>
+	{
+		if (module == 0)
+ 308:	00 97       	sbiw	r24, 0x00	; 0
+ 30a:	29 f4       	brne	.+10     	; 0x316 <d_nine+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 30c:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 30e:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 310:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+ 312:	c6 9a       	sbi	0x18, 6	; 24
+ 314:	06 c0       	rjmp	.+12     	; 0x322 <d_nine+0x20>
+		}
+		if (module == 1)
+ 316:	01 97       	sbiw	r24, 0x01	; 1
+ 318:	21 f4       	brne	.+8      	; 0x322 <d_nine+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 31a:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 31c:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+ 31e:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+ 320:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC |= (1 << PC3); // A1
+ 322:	ab 9a       	sbi	0x15, 3	; 21
+		PORTC |= (1 << PC1); // B1
+ 324:	a9 9a       	sbi	0x15, 1	; 21
+		PORTD |= (1 << PD2); // C1
+ 326:	92 9a       	sbi	0x12, 2	; 18
+		PORTC |= (1 << PC2); // F1
+ 328:	aa 9a       	sbi	0x15, 2	; 21
+		PORTC |= (1 << PC4); // G1
+ 32a:	ac 9a       	sbi	0x15, 4	; 21
+ 32c:	08 95       	ret
+	}
+	if (digit == 1)
+ 32e:	61 30       	cpi	r22, 0x01	; 1
+ 330:	71 05       	cpc	r23, r1
+ 332:	91 f4       	brne	.+36     	; 0x358 <d_nine+0x56>
+	{
+		if (module == 0)
+ 334:	00 97       	sbiw	r24, 0x00	; 0
+ 336:	29 f4       	brne	.+10     	; 0x342 <d_nine+0x40>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 338:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+ 33a:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 33c:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+ 33e:	c7 9a       	sbi	0x18, 7	; 24
+ 340:	06 c0       	rjmp	.+12     	; 0x34e <d_nine+0x4c>
+		}
+		if (module == 1)
+ 342:	01 97       	sbiw	r24, 0x01	; 1
+ 344:	21 f4       	brne	.+8      	; 0x34e <d_nine+0x4c>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+ 346:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 348:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 34a:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+ 34c:	ad 9a       	sbi	0x15, 5	; 21
+		}
+		
+		PORTB |= (1 << PB2); // A2
+ 34e:	c2 9a       	sbi	0x18, 2	; 24
+		PORTD |= (1 << PD1); // B2
+ 350:	91 9a       	sbi	0x12, 1	; 18
+		PORTD |= (1 << PD4); // C2
+ 352:	94 9a       	sbi	0x12, 4	; 18
+		PORTD |= (1 << PD0); // F2
+ 354:	90 9a       	sbi	0x12, 0	; 18
+		PORTC |= (1 << PC0); // G2
+ 356:	a8 9a       	sbi	0x15, 0	; 21
+ 358:	08 95       	ret
+
+0000035a <d_zero>:
+	}
+}
+
+void d_zero(int module, int digit)
+{
+	if (digit == 0)
+ 35a:	61 15       	cp	r22, r1
+ 35c:	71 05       	cpc	r23, r1
+ 35e:	a1 f4       	brne	.+40     	; 0x388 <d_zero+0x2e>
+	{
+		if (module == 0)
+ 360:	00 97       	sbiw	r24, 0x00	; 0
+ 362:	29 f4       	brne	.+10     	; 0x36e <d_zero+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 364:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 366:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 368:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+ 36a:	c6 9a       	sbi	0x18, 6	; 24
+ 36c:	06 c0       	rjmp	.+12     	; 0x37a <d_zero+0x20>
+		}
+		if (module == 1)
+ 36e:	01 97       	sbiw	r24, 0x01	; 1
+ 370:	21 f4       	brne	.+8      	; 0x37a <d_zero+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 372:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 374:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+ 376:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+ 378:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC |= (1 << PC3); // A1
+ 37a:	ab 9a       	sbi	0x15, 3	; 21
+		PORTC |= (1 << PC1); // B1
+ 37c:	a9 9a       	sbi	0x15, 1	; 21
+		PORTD |= (1 << PD2); // C1
+ 37e:	92 9a       	sbi	0x12, 2	; 18
+		PORTB |= (1 << PB0); // D1
+ 380:	c0 9a       	sbi	0x18, 0	; 24
+		PORTD |= (1 << PD7); // E1
+ 382:	97 9a       	sbi	0x12, 7	; 18
+		PORTC |= (1 << PC2); // F1
+ 384:	aa 9a       	sbi	0x15, 2	; 21
+ 386:	08 95       	ret
+	}
+	if (digit == 1)
+ 388:	61 30       	cpi	r22, 0x01	; 1
+ 38a:	71 05       	cpc	r23, r1
+ 38c:	99 f4       	brne	.+38     	; 0x3b4 <d_zero+0x5a>
+	{
+		if (module == 0)
+ 38e:	00 97       	sbiw	r24, 0x00	; 0
+ 390:	29 f4       	brne	.+10     	; 0x39c <d_zero+0x42>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 392:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+ 394:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 396:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+ 398:	c7 9a       	sbi	0x18, 7	; 24
+ 39a:	06 c0       	rjmp	.+12     	; 0x3a8 <d_zero+0x4e>
+		}
+		if (module == 1)
+ 39c:	01 97       	sbiw	r24, 0x01	; 1
+ 39e:	21 f4       	brne	.+8      	; 0x3a8 <d_zero+0x4e>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+ 3a0:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 3a2:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 3a4:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+ 3a6:	ad 9a       	sbi	0x15, 5	; 21
+		}
+		
+		PORTB |= (1 << PB2); // A2
+ 3a8:	c2 9a       	sbi	0x18, 2	; 24
+		PORTD |= (1 << PD1); // B2
+ 3aa:	91 9a       	sbi	0x12, 1	; 18
+		PORTD |= (1 << PD4); // C2
+ 3ac:	94 9a       	sbi	0x12, 4	; 18
+		PORTD |= (1 << PD5); // D2
+ 3ae:	95 9a       	sbi	0x12, 5	; 18
+		PORTD |= (1 << PD6); // E2
+ 3b0:	96 9a       	sbi	0x12, 6	; 18
+		PORTD |= (1 << PD0); // F2
+ 3b2:	90 9a       	sbi	0x12, 0	; 18
+ 3b4:	08 95       	ret
+
+000003b6 <d_dash>:
+	}
+}
+
+void d_dash(int module, int digit)
+{
+	if (digit == 0)
+ 3b6:	61 15       	cp	r22, r1
+ 3b8:	71 05       	cpc	r23, r1
+ 3ba:	79 f4       	brne	.+30     	; 0x3da <d_dash+0x24>
+	{
+		if (module == 0)
+ 3bc:	00 97       	sbiw	r24, 0x00	; 0
+ 3be:	29 f4       	brne	.+10     	; 0x3ca <d_dash+0x14>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 3c0:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 3c2:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 3c4:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+ 3c6:	c6 9a       	sbi	0x18, 6	; 24
+ 3c8:	06 c0       	rjmp	.+12     	; 0x3d6 <d_dash+0x20>
+		}
+		if (module == 1)
+ 3ca:	01 97       	sbiw	r24, 0x01	; 1
+ 3cc:	21 f4       	brne	.+8      	; 0x3d6 <d_dash+0x20>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 3ce:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 3d0:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+ 3d2:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+ 3d4:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC |= (1 << PC4); // G1
+ 3d6:	ac 9a       	sbi	0x15, 4	; 21
+ 3d8:	08 95       	ret
+	}
+	if (digit == 1)
+ 3da:	61 30       	cpi	r22, 0x01	; 1
+ 3dc:	71 05       	cpc	r23, r1
+ 3de:	71 f4       	brne	.+28     	; 0x3fc <d_dash+0x46>
+	{
+		if (module == 0)
+ 3e0:	00 97       	sbiw	r24, 0x00	; 0
+ 3e2:	29 f4       	brne	.+10     	; 0x3ee <d_dash+0x38>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 3e4:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+ 3e6:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 3e8:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+ 3ea:	c7 9a       	sbi	0x18, 7	; 24
+ 3ec:	06 c0       	rjmp	.+12     	; 0x3fa <d_dash+0x44>
+		}
+		if (module == 1)
+ 3ee:	01 97       	sbiw	r24, 0x01	; 1
+ 3f0:	21 f4       	brne	.+8      	; 0x3fa <d_dash+0x44>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+ 3f2:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 3f4:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 3f6:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+ 3f8:	ad 9a       	sbi	0x15, 5	; 21
+		}
+		
+		PORTC |= (1 << PC0); // G2
+ 3fa:	a8 9a       	sbi	0x15, 0	; 21
+ 3fc:	08 95       	ret
+
+000003fe <resetModuleDigit>:
+
+
+
+void resetModuleDigit(int module,int digit)
+{
+	if (digit == 0)
+ 3fe:	61 15       	cp	r22, r1
+ 400:	71 05       	cpc	r23, r1
+ 402:	a9 f4       	brne	.+42     	; 0x42e <__LOCK_REGION_LENGTH__+0x2e>
+	{
+		if (module == 0)
+ 404:	00 97       	sbiw	r24, 0x00	; 0
+ 406:	29 f4       	brne	.+10     	; 0x412 <__LOCK_REGION_LENGTH__+0x12>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 408:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 40a:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 40c:	93 98       	cbi	0x12, 3	; 18
+			// set selected digit high
+			PORTB |= (1 << PB6);
+ 40e:	c6 9a       	sbi	0x18, 6	; 24
+ 410:	06 c0       	rjmp	.+12     	; 0x41e <__LOCK_REGION_LENGTH__+0x1e>
+		}
+		if (module == 1)
+ 412:	01 97       	sbiw	r24, 0x01	; 1
+ 414:	21 f4       	brne	.+8      	; 0x41e <__LOCK_REGION_LENGTH__+0x1e>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 416:	ad 98       	cbi	0x15, 5	; 21
+			PORTB &= ~(1 << PB7);
+ 418:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PB6);
+ 41a:	96 98       	cbi	0x12, 6	; 18
+			// set selected digit high
+			PORTB |= (1 << PD3);
+ 41c:	c3 9a       	sbi	0x18, 3	; 24
+		}
+		
+		PORTC &= ~(1 << PC3); // A1
+ 41e:	ab 98       	cbi	0x15, 3	; 21
+		PORTC &= ~(1 << PC1); // B1
+ 420:	a9 98       	cbi	0x15, 1	; 21
+		PORTD &= ~(1 << PD2); // C1
+ 422:	92 98       	cbi	0x12, 2	; 18
+		PORTB &= ~(1 << PB0); // D1
+ 424:	c0 98       	cbi	0x18, 0	; 24
+		PORTD &= ~(1 << PD7); // E1
+ 426:	97 98       	cbi	0x12, 7	; 18
+		PORTC &= ~(1 << PC2); // F1
+ 428:	aa 98       	cbi	0x15, 2	; 21
+		PORTC &= ~(1 << PC4); // G1
+ 42a:	ac 98       	cbi	0x15, 4	; 21
+ 42c:	08 95       	ret
+	}
+	if (digit == 1)
+ 42e:	61 30       	cpi	r22, 0x01	; 1
+ 430:	71 05       	cpc	r23, r1
+ 432:	a1 f4       	brne	.+40     	; 0x45c <__LOCK_REGION_LENGTH__+0x5c>
+	{
+		if (module == 0)
+ 434:	00 97       	sbiw	r24, 0x00	; 0
+ 436:	29 f4       	brne	.+10     	; 0x442 <__LOCK_REGION_LENGTH__+0x42>
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+ 438:	ad 98       	cbi	0x15, 5	; 21
+			PORTD &= ~(1 << PD3);
+ 43a:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 43c:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTB |= (1 << PB7);
+ 43e:	c7 9a       	sbi	0x18, 7	; 24
+ 440:	06 c0       	rjmp	.+12     	; 0x44e <__LOCK_REGION_LENGTH__+0x4e>
+		}
+		if (module == 1)
+ 442:	01 97       	sbiw	r24, 0x01	; 1
+ 444:	21 f4       	brne	.+8      	; 0x44e <__LOCK_REGION_LENGTH__+0x4e>
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+ 446:	c7 98       	cbi	0x18, 7	; 24
+			PORTD &= ~(1 << PD3);
+ 448:	93 98       	cbi	0x12, 3	; 18
+			PORTB &= ~(1 << PB6);
+ 44a:	c6 98       	cbi	0x18, 6	; 24
+			// set selected digit high
+			PORTC |= (1 << PC5);
+ 44c:	ad 9a       	sbi	0x15, 5	; 21
+		}
+		
+		PORTB &= ~(1 << PB2); // A2
+ 44e:	c2 98       	cbi	0x18, 2	; 24
+		PORTD &= ~(1 << PD1); // B2
+ 450:	91 98       	cbi	0x12, 1	; 18
+		PORTD &= ~(1 << PD4); // C2
+ 452:	94 98       	cbi	0x12, 4	; 18
+		PORTD &= ~(1 << PD5); // D2
+ 454:	95 98       	cbi	0x12, 5	; 18
+		PORTD &= ~(1 << PD6); // E2
+ 456:	96 98       	cbi	0x12, 6	; 18
+		PORTD &= ~(1 << PD0); // F2
+ 458:	90 98       	cbi	0x12, 0	; 18
+		PORTC &= ~(1 << PC0); // G2
+ 45a:	a8 98       	cbi	0x15, 0	; 21
+ 45c:	08 95       	ret
+
+0000045e <displayTest>:
+	}
+}
+
+void displayTest()
+{
+ 45e:	0f 93       	push	r16
+ 460:	1f 93       	push	r17
+ 462:	cf 93       	push	r28
+ 464:	df 93       	push	r29
+	for (int j=0; j<2; j++)
+ 466:	00 e0       	ldi	r16, 0x00	; 0
+ 468:	10 e0       	ldi	r17, 0x00	; 0
+ 46a:	af c0       	rjmp	.+350    	; 0x5ca <__stack+0x16b>
+	{
+		for (int k=0; k<2; k++)
+		{
+			d_dash(j,k);
+ 46c:	be 01       	movw	r22, r28
+ 46e:	c8 01       	movw	r24, r16
+ 470:	a2 df       	rcall	.-188    	; 0x3b6 <d_dash>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 164:	2f ef       	ldi	r18, 0xFF	; 255
- 166:	84 e3       	ldi	r24, 0x34	; 52
- 168:	9c e0       	ldi	r25, 0x0C	; 12
- 16a:	21 50       	subi	r18, 0x01	; 1
- 16c:	80 40       	sbci	r24, 0x00	; 0
- 16e:	90 40       	sbci	r25, 0x00	; 0
- 170:	e1 f7       	brne	.-8      	; 0x16a <main+0x30>
- 172:	00 c0       	rjmp	.+0      	; 0x174 <main+0x3a>
- 174:	00 00       	nop
-		_delay_ms(500);
-		resetModuleDigit(1);
- 176:	81 e0       	ldi	r24, 0x01	; 1
- 178:	90 e0       	ldi	r25, 0x00	; 0
- 17a:	a4 df       	rcall	.-184    	; 0xc4 <resetModuleDigit>
-		d_eight(2);
- 17c:	82 e0       	ldi	r24, 0x02	; 2
- 17e:	90 e0       	ldi	r25, 0x00	; 0
- 180:	66 df       	rcall	.-308    	; 0x4e <d_eight>
- 182:	2f ef       	ldi	r18, 0xFF	; 255
- 184:	84 e3       	ldi	r24, 0x34	; 52
- 186:	9c e0       	ldi	r25, 0x0C	; 12
- 188:	21 50       	subi	r18, 0x01	; 1
- 18a:	80 40       	sbci	r24, 0x00	; 0
- 18c:	90 40       	sbci	r25, 0x00	; 0
- 18e:	e1 f7       	brne	.-8      	; 0x188 <main+0x4e>
- 190:	00 c0       	rjmp	.+0      	; 0x192 <main+0x58>
- 192:	00 00       	nop
-		_delay_ms(500);
-		resetModuleDigit(2);
- 194:	82 e0       	ldi	r24, 0x02	; 2
- 196:	90 e0       	ldi	r25, 0x00	; 0
- 198:	95 df       	rcall	.-214    	; 0xc4 <resetModuleDigit>
-		d_eight(3);
- 19a:	83 e0       	ldi	r24, 0x03	; 3
- 19c:	90 e0       	ldi	r25, 0x00	; 0
- 19e:	57 df       	rcall	.-338    	; 0x4e <d_eight>
- 1a0:	2f ef       	ldi	r18, 0xFF	; 255
- 1a2:	84 e3       	ldi	r24, 0x34	; 52
- 1a4:	9c e0       	ldi	r25, 0x0C	; 12
- 1a6:	21 50       	subi	r18, 0x01	; 1
- 1a8:	80 40       	sbci	r24, 0x00	; 0
- 1aa:	90 40       	sbci	r25, 0x00	; 0
- 1ac:	e1 f7       	brne	.-8      	; 0x1a6 <main+0x6c>
- 1ae:	00 c0       	rjmp	.+0      	; 0x1b0 <main+0x76>
- 1b0:	00 00       	nop
-		_delay_ms(500);
-		resetModuleDigit(3);
- 1b2:	83 e0       	ldi	r24, 0x03	; 3
- 1b4:	90 e0       	ldi	r25, 0x00	; 0
- 1b6:	86 df       	rcall	.-244    	; 0xc4 <resetModuleDigit>
-		d_eight(4);
- 1b8:	84 e0       	ldi	r24, 0x04	; 4
- 1ba:	90 e0       	ldi	r25, 0x00	; 0
- 1bc:	48 df       	rcall	.-368    	; 0x4e <d_eight>
- 1be:	2f ef       	ldi	r18, 0xFF	; 255
- 1c0:	84 e3       	ldi	r24, 0x34	; 52
- 1c2:	9c e0       	ldi	r25, 0x0C	; 12
- 1c4:	21 50       	subi	r18, 0x01	; 1
- 1c6:	80 40       	sbci	r24, 0x00	; 0
- 1c8:	90 40       	sbci	r25, 0x00	; 0
- 1ca:	e1 f7       	brne	.-8      	; 0x1c4 <main+0x8a>
- 1cc:	00 c0       	rjmp	.+0      	; 0x1ce <main+0x94>
- 1ce:	00 00       	nop
-		_delay_ms(500);
-		resetModuleDigit(4);
- 1d0:	84 e0       	ldi	r24, 0x04	; 4
- 1d2:	90 e0       	ldi	r25, 0x00	; 0
- 1d4:	77 df       	rcall	.-274    	; 0xc4 <resetModuleDigit>
- 1d6:	c3 cf       	rjmp	.-122    	; 0x15e <main+0x24>
+ 472:	2f ef       	ldi	r18, 0xFF	; 255
+ 474:	80 e7       	ldi	r24, 0x70	; 112
+ 476:	92 e0       	ldi	r25, 0x02	; 2
+ 478:	21 50       	subi	r18, 0x01	; 1
+ 47a:	80 40       	sbci	r24, 0x00	; 0
+ 47c:	90 40       	sbci	r25, 0x00	; 0
+ 47e:	e1 f7       	brne	.-8      	; 0x478 <__stack+0x19>
+ 480:	00 c0       	rjmp	.+0      	; 0x482 <__stack+0x23>
+ 482:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 484:	be 01       	movw	r22, r28
+ 486:	c8 01       	movw	r24, r16
+ 488:	ba df       	rcall	.-140    	; 0x3fe <resetModuleDigit>
+			d_zero(j,k);
+ 48a:	be 01       	movw	r22, r28
+ 48c:	c8 01       	movw	r24, r16
+ 48e:	65 df       	rcall	.-310    	; 0x35a <d_zero>
+ 490:	2f ef       	ldi	r18, 0xFF	; 255
+ 492:	80 e7       	ldi	r24, 0x70	; 112
+ 494:	92 e0       	ldi	r25, 0x02	; 2
+ 496:	21 50       	subi	r18, 0x01	; 1
+ 498:	80 40       	sbci	r24, 0x00	; 0
+ 49a:	90 40       	sbci	r25, 0x00	; 0
+ 49c:	e1 f7       	brne	.-8      	; 0x496 <__stack+0x37>
+ 49e:	00 c0       	rjmp	.+0      	; 0x4a0 <__stack+0x41>
+ 4a0:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 4a2:	be 01       	movw	r22, r28
+ 4a4:	c8 01       	movw	r24, r16
+ 4a6:	ab df       	rcall	.-170    	; 0x3fe <resetModuleDigit>
+			d_one(j,k);
+ 4a8:	be 01       	movw	r22, r28
+ 4aa:	c8 01       	movw	r24, r16
+ 4ac:	00 de       	rcall	.-1024   	; 0xae <d_one>
+ 4ae:	2f ef       	ldi	r18, 0xFF	; 255
+ 4b0:	80 e7       	ldi	r24, 0x70	; 112
+ 4b2:	92 e0       	ldi	r25, 0x02	; 2
+ 4b4:	21 50       	subi	r18, 0x01	; 1
+ 4b6:	80 40       	sbci	r24, 0x00	; 0
+ 4b8:	90 40       	sbci	r25, 0x00	; 0
+ 4ba:	e1 f7       	brne	.-8      	; 0x4b4 <__stack+0x55>
+ 4bc:	00 c0       	rjmp	.+0      	; 0x4be <__stack+0x5f>
+ 4be:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 4c0:	be 01       	movw	r22, r28
+ 4c2:	c8 01       	movw	r24, r16
+ 4c4:	9c df       	rcall	.-200    	; 0x3fe <resetModuleDigit>
+			d_two(j,k);
+ 4c6:	be 01       	movw	r22, r28
+ 4c8:	c8 01       	movw	r24, r16
+ 4ca:	17 de       	rcall	.-978    	; 0xfa <d_two>
+ 4cc:	2f ef       	ldi	r18, 0xFF	; 255
+ 4ce:	80 e7       	ldi	r24, 0x70	; 112
+ 4d0:	92 e0       	ldi	r25, 0x02	; 2
+ 4d2:	21 50       	subi	r18, 0x01	; 1
+ 4d4:	80 40       	sbci	r24, 0x00	; 0
+ 4d6:	90 40       	sbci	r25, 0x00	; 0
+ 4d8:	e1 f7       	brne	.-8      	; 0x4d2 <__stack+0x73>
+ 4da:	00 c0       	rjmp	.+0      	; 0x4dc <__stack+0x7d>
+ 4dc:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 4de:	be 01       	movw	r22, r28
+ 4e0:	c8 01       	movw	r24, r16
+ 4e2:	8d df       	rcall	.-230    	; 0x3fe <resetModuleDigit>
+			d_three(j,k);
+ 4e4:	be 01       	movw	r22, r28
+ 4e6:	c8 01       	movw	r24, r16
+ 4e8:	34 de       	rcall	.-920    	; 0x152 <d_three>
+ 4ea:	2f ef       	ldi	r18, 0xFF	; 255
+ 4ec:	80 e7       	ldi	r24, 0x70	; 112
+ 4ee:	92 e0       	ldi	r25, 0x02	; 2
+ 4f0:	21 50       	subi	r18, 0x01	; 1
+ 4f2:	80 40       	sbci	r24, 0x00	; 0
+ 4f4:	90 40       	sbci	r25, 0x00	; 0
+ 4f6:	e1 f7       	brne	.-8      	; 0x4f0 <__stack+0x91>
+ 4f8:	00 c0       	rjmp	.+0      	; 0x4fa <__stack+0x9b>
+ 4fa:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 4fc:	be 01       	movw	r22, r28
+ 4fe:	c8 01       	movw	r24, r16
+ 500:	7e df       	rcall	.-260    	; 0x3fe <resetModuleDigit>
+			d_four(j,k);
+ 502:	be 01       	movw	r22, r28
+ 504:	c8 01       	movw	r24, r16
+ 506:	51 de       	rcall	.-862    	; 0x1aa <d_four>
+ 508:	2f ef       	ldi	r18, 0xFF	; 255
+ 50a:	80 e7       	ldi	r24, 0x70	; 112
+ 50c:	92 e0       	ldi	r25, 0x02	; 2
+ 50e:	21 50       	subi	r18, 0x01	; 1
+ 510:	80 40       	sbci	r24, 0x00	; 0
+ 512:	90 40       	sbci	r25, 0x00	; 0
+ 514:	e1 f7       	brne	.-8      	; 0x50e <__stack+0xaf>
+ 516:	00 c0       	rjmp	.+0      	; 0x518 <__stack+0xb9>
+ 518:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 51a:	be 01       	movw	r22, r28
+ 51c:	c8 01       	movw	r24, r16
+ 51e:	6f df       	rcall	.-290    	; 0x3fe <resetModuleDigit>
+			d_five(j,k);
+ 520:	be 01       	movw	r22, r28
+ 522:	c8 01       	movw	r24, r16
+ 524:	6c de       	rcall	.-808    	; 0x1fe <d_five>
+ 526:	2f ef       	ldi	r18, 0xFF	; 255
+ 528:	80 e7       	ldi	r24, 0x70	; 112
+ 52a:	92 e0       	ldi	r25, 0x02	; 2
+ 52c:	21 50       	subi	r18, 0x01	; 1
+ 52e:	80 40       	sbci	r24, 0x00	; 0
+ 530:	90 40       	sbci	r25, 0x00	; 0
+ 532:	e1 f7       	brne	.-8      	; 0x52c <__stack+0xcd>
+ 534:	00 c0       	rjmp	.+0      	; 0x536 <__stack+0xd7>
+ 536:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 538:	be 01       	movw	r22, r28
+ 53a:	c8 01       	movw	r24, r16
+ 53c:	60 df       	rcall	.-320    	; 0x3fe <resetModuleDigit>
+			d_six(j,k);
+ 53e:	be 01       	movw	r22, r28
+ 540:	c8 01       	movw	r24, r16
+ 542:	89 de       	rcall	.-750    	; 0x256 <d_six>
+ 544:	2f ef       	ldi	r18, 0xFF	; 255
+ 546:	80 e7       	ldi	r24, 0x70	; 112
+ 548:	92 e0       	ldi	r25, 0x02	; 2
+ 54a:	21 50       	subi	r18, 0x01	; 1
+ 54c:	80 40       	sbci	r24, 0x00	; 0
+ 54e:	90 40       	sbci	r25, 0x00	; 0
+ 550:	e1 f7       	brne	.-8      	; 0x54a <__stack+0xeb>
+ 552:	00 c0       	rjmp	.+0      	; 0x554 <__stack+0xf5>
+ 554:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 556:	be 01       	movw	r22, r28
+ 558:	c8 01       	movw	r24, r16
+ 55a:	51 df       	rcall	.-350    	; 0x3fe <resetModuleDigit>
+			d_seven(j,k);
+ 55c:	be 01       	movw	r22, r28
+ 55e:	c8 01       	movw	r24, r16
+ 560:	a8 de       	rcall	.-688    	; 0x2b2 <d_seven>
+ 562:	2f ef       	ldi	r18, 0xFF	; 255
+ 564:	80 e7       	ldi	r24, 0x70	; 112
+ 566:	92 e0       	ldi	r25, 0x02	; 2
+ 568:	21 50       	subi	r18, 0x01	; 1
+ 56a:	80 40       	sbci	r24, 0x00	; 0
+ 56c:	90 40       	sbci	r25, 0x00	; 0
+ 56e:	e1 f7       	brne	.-8      	; 0x568 <__stack+0x109>
+ 570:	00 c0       	rjmp	.+0      	; 0x572 <__stack+0x113>
+ 572:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 574:	be 01       	movw	r22, r28
+ 576:	c8 01       	movw	r24, r16
+ 578:	42 df       	rcall	.-380    	; 0x3fe <resetModuleDigit>
+			d_eight(j,k);
+ 57a:	be 01       	movw	r22, r28
+ 57c:	c8 01       	movw	r24, r16
+ 57e:	67 dd       	rcall	.-1330   	; 0x4e <d_eight>
+ 580:	2f ef       	ldi	r18, 0xFF	; 255
+ 582:	80 e7       	ldi	r24, 0x70	; 112
+ 584:	92 e0       	ldi	r25, 0x02	; 2
+ 586:	21 50       	subi	r18, 0x01	; 1
+ 588:	80 40       	sbci	r24, 0x00	; 0
+ 58a:	90 40       	sbci	r25, 0x00	; 0
+ 58c:	e1 f7       	brne	.-8      	; 0x586 <__stack+0x127>
+ 58e:	00 c0       	rjmp	.+0      	; 0x590 <__stack+0x131>
+ 590:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 592:	be 01       	movw	r22, r28
+ 594:	c8 01       	movw	r24, r16
+ 596:	33 df       	rcall	.-410    	; 0x3fe <resetModuleDigit>
+			d_nine(j,k);
+ 598:	be 01       	movw	r22, r28
+ 59a:	c8 01       	movw	r24, r16
+ 59c:	b2 de       	rcall	.-668    	; 0x302 <d_nine>
+ 59e:	2f ef       	ldi	r18, 0xFF	; 255
+ 5a0:	80 e7       	ldi	r24, 0x70	; 112
+ 5a2:	92 e0       	ldi	r25, 0x02	; 2
+ 5a4:	21 50       	subi	r18, 0x01	; 1
+ 5a6:	80 40       	sbci	r24, 0x00	; 0
+ 5a8:	90 40       	sbci	r25, 0x00	; 0
+ 5aa:	e1 f7       	brne	.-8      	; 0x5a4 <__stack+0x145>
+ 5ac:	00 c0       	rjmp	.+0      	; 0x5ae <__stack+0x14f>
+ 5ae:	00 00       	nop
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+ 5b0:	be 01       	movw	r22, r28
+ 5b2:	c8 01       	movw	r24, r16
+ 5b4:	24 df       	rcall	.-440    	; 0x3fe <resetModuleDigit>
 
-000001d8 <_exit>:
- 1d8:	f8 94       	cli
+void displayTest()
+{
+	for (int j=0; j<2; j++)
+	{
+		for (int k=0; k<2; k++)
+ 5b6:	21 96       	adiw	r28, 0x01	; 1
+ 5b8:	c2 30       	cpi	r28, 0x02	; 2
+ 5ba:	d1 05       	cpc	r29, r1
+ 5bc:	09 f0       	breq	.+2      	; 0x5c0 <__stack+0x161>
+ 5be:	56 cf       	rjmp	.-340    	; 0x46c <__stack+0xd>
+	}
+}
 
-000001da <__stop_program>:
- 1da:	ff cf       	rjmp	.-2      	; 0x1da <__stop_program>
+void displayTest()
+{
+	for (int j=0; j<2; j++)
+ 5c0:	0f 5f       	subi	r16, 0xFF	; 255
+ 5c2:	1f 4f       	sbci	r17, 0xFF	; 255
+ 5c4:	02 30       	cpi	r16, 0x02	; 2
+ 5c6:	11 05       	cpc	r17, r1
+ 5c8:	19 f0       	breq	.+6      	; 0x5d0 <__stack+0x171>
+		PORTC &= ~(1 << PC0); // G2
+	}
+}
+
+void displayTest()
+{
+ 5ca:	c0 e0       	ldi	r28, 0x00	; 0
+ 5cc:	d0 e0       	ldi	r29, 0x00	; 0
+ 5ce:	4e cf       	rjmp	.-356    	; 0x46c <__stack+0xd>
+			d_nine(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+		}
+	}
+}
+ 5d0:	df 91       	pop	r29
+ 5d2:	cf 91       	pop	r28
+ 5d4:	1f 91       	pop	r17
+ 5d6:	0f 91       	pop	r16
+ 5d8:	08 95       	ret
+
+000005da <main>:
+
+int main(void)
+{
+	/* Ausgänge setzen. */
+	DDRC |= (1 << PC5); // 1. Modul 2. Ziffer
+ 5da:	a5 9a       	sbi	0x14, 5	; 20
+	DDRB |= (1 << PB7); // 2. Modul 2. Ziffer
+ 5dc:	bf 9a       	sbi	0x17, 7	; 23
+	DDRD |= (1 << PD3); // 1. Modul 1. Ziffer
+ 5de:	8b 9a       	sbi	0x11, 3	; 17
+	DDRB |= (1 << PB6); // 2. Modul 1. Ziffer
+ 5e0:	be 9a       	sbi	0x17, 6	; 23
+
+	DDRB |= (1 << PB2); // A2
+ 5e2:	ba 9a       	sbi	0x17, 2	; 23
+	DDRD |= (1 << PD1); // B2
+ 5e4:	89 9a       	sbi	0x11, 1	; 17
+	DDRD |= (1 << PD4); // C2
+ 5e6:	8c 9a       	sbi	0x11, 4	; 17
+	DDRD |= (1 << PD5); // D2
+ 5e8:	8d 9a       	sbi	0x11, 5	; 17
+	DDRD |= (1 << PD6); // E2
+ 5ea:	8e 9a       	sbi	0x11, 6	; 17
+	DDRD |= (1 << PD0); // F2
+ 5ec:	88 9a       	sbi	0x11, 0	; 17
+	DDRC |= (1 << PC0); // G2
+ 5ee:	a0 9a       	sbi	0x14, 0	; 20
+	
+	DDRC |= (1 << PC3); // A1
+ 5f0:	a3 9a       	sbi	0x14, 3	; 20
+	DDRC |= (1 << PC1); // B1
+ 5f2:	a1 9a       	sbi	0x14, 1	; 20
+	DDRD |= (1 << PD2); // C1
+ 5f4:	8a 9a       	sbi	0x11, 2	; 17
+	DDRB |= (1 << PB0); // D1
+ 5f6:	b8 9a       	sbi	0x17, 0	; 23
+	DDRD |= (1 << PD7); // E1
+ 5f8:	8f 9a       	sbi	0x11, 7	; 17
+	DDRC |= (1 << PC2); // F1
+ 5fa:	a2 9a       	sbi	0x14, 2	; 20
+	DDRC |= (1 << PC4); // G1
+ 5fc:	a4 9a       	sbi	0x14, 4	; 20
+	
+	while (1)
+	{
+		displayTest();
+ 5fe:	2f df       	rcall	.-418    	; 0x45e <displayTest>
+ 600:	fe cf       	rjmp	.-4      	; 0x5fe <main+0x24>
+
+00000602 <_exit>:
+ 602:	f8 94       	cli
+
+00000604 <__stop_program>:
+ 604:	ff cf       	rjmp	.-2      	; 0x604 <__stop_program>

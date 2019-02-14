@@ -10,16 +10,28 @@
 
 int i=4;
 
-void d_eight(int digit)
+void d_eight(int module, int digit)
 {
-	if(digit == 1)
+	if (digit == 0)
 	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-		PORTB &= ~(1 << PB7);
-		PORTD &= ~(1 << PD3);
-		// set selected digit high
-		PORTB |= (1 << PB6);
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
 		
 		PORTC |= (1 << PC3); // A1
 		PORTC |= (1 << PC1); // B1
@@ -29,48 +41,26 @@ void d_eight(int digit)
 		PORTC |= (1 << PC2); // F1
 		PORTC |= (1 << PC4); // G1
 	}
-	if (digit == 2)
+	if (digit == 1)
 	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-		PORTD &= ~(1 << PD3);
-		PORTB &= ~(1 << PB6);
-		// set selected digit high
-		PORTB |= (1 << PB7);
-		
-		PORTB |= (1 << PB2); // A2
-		PORTD |= (1 << PD1); // B2
-		PORTD |= (1 << PD4); // C2
-		PORTD |= (1 << PD5); // D2
-		PORTD |= (1 << PD6); // E2
-		PORTD |= (1 << PD0); // F2
-		PORTC |= (1 << PC0); // G2
-	}
-	if (digit == 3)
-	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-		PORTB &= ~(1 << PB7);
-		PORTD &= ~(1 << PB6);
-		// set selected digit high
-		PORTB |= (1 << PD3);
-		
-		PORTC |= (1 << PC3); // A1
-		PORTC |= (1 << PC1); // B1
-		PORTD |= (1 << PD2); // C1
-		PORTB |= (1 << PB0); // D1
-		PORTD |= (1 << PD7); // E1
-		PORTC |= (1 << PC2); // F1
-		PORTC |= (1 << PC4); // G1
-	}
-	if (digit == 4)
-	{
-		// set not wanted digits low
-		PORTB &= ~(1 << PB7);
-		PORTD &= ~(1 << PD3);
-		PORTB &= ~(1 << PB6);
-		// set selected digit high
-		PORTC |= (1 << PC5);
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
 		
 		PORTB |= (1 << PB2); // A2
 		PORTD |= (1 << PD1); // B2
@@ -82,16 +72,595 @@ void d_eight(int digit)
 	}
 }
 
-void resetModuleDigit(int digit)
+void d_one(int module, int digit)
 {
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
+		
+		PORTC |= (1 << PC1); // B1
+		PORTD |= (1 << PD2); // C1
+	}
 	if (digit == 1)
 	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-		PORTB &= ~(1 << PB7);
-		PORTD &= ~(1 << PD3);
-		// set selected digit high
-		PORTB |= (1 << PB6);
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
+
+		PORTD |= (1 << PD1); // B2
+		PORTD |= (1 << PD4); // C2
+	}
+}
+
+void d_two(int module, int digit)
+{
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
+		
+		PORTC |= (1 << PC3); // A1
+		PORTC |= (1 << PC1); // B1
+		PORTB |= (1 << PB0); // D1
+		PORTD |= (1 << PD7); // E1
+		PORTC |= (1 << PC4); // G1
+	}
+	if (digit == 1)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
+		
+		PORTB |= (1 << PB2); // A2
+		PORTD |= (1 << PD1); // B2
+		PORTD |= (1 << PD5); // D2
+		PORTD |= (1 << PD6); // E2
+		PORTC |= (1 << PC0); // G2
+	}
+}
+
+void d_three(int module, int digit)
+{
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
+		
+		PORTC |= (1 << PC3); // A1
+		PORTC |= (1 << PC1); // B1
+		PORTD |= (1 << PD2); // C1
+		PORTB |= (1 << PB0); // D1
+		PORTC |= (1 << PC4); // G1
+	}
+	if (digit == 1)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
+		
+		PORTB |= (1 << PB2); // A2
+		PORTD |= (1 << PD1); // B2
+		PORTD |= (1 << PD4); // C2
+		PORTD |= (1 << PD5); // D2
+		PORTC |= (1 << PC0); // G2
+	}
+}
+
+void d_four(int module, int digit)
+{
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
+		
+		PORTC |= (1 << PC1); // B1
+		PORTD |= (1 << PD2); // C1
+		PORTC |= (1 << PC2); // F1
+		PORTC |= (1 << PC4); // G1
+	}
+	if (digit == 1)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
+		
+		PORTD |= (1 << PD1); // B2
+		PORTD |= (1 << PD4); // C2
+		PORTD |= (1 << PD0); // F2
+		PORTC |= (1 << PC0); // G2
+	}
+}
+
+void d_five(int module, int digit)
+{
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
+		
+		PORTC |= (1 << PC3); // A1
+		PORTD |= (1 << PD2); // C1
+		PORTB |= (1 << PB0); // D1
+		PORTC |= (1 << PC2); // F1
+		PORTC |= (1 << PC4); // G1
+	}
+	if (digit == 1)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
+		
+		PORTB |= (1 << PB2); // A2
+		PORTD |= (1 << PD4); // C2
+		PORTD |= (1 << PD5); // D2
+		PORTD |= (1 << PD0); // F2
+		PORTC |= (1 << PC0); // G2
+	}
+}
+
+void d_six(int module, int digit)
+{
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
+		
+		PORTC |= (1 << PC3); // A1
+		PORTD |= (1 << PD2); // C1
+		PORTB |= (1 << PB0); // D1
+		PORTD |= (1 << PD7); // E1
+		PORTC |= (1 << PC2); // F1
+		PORTC |= (1 << PC4); // G1
+	}
+	if (digit == 1)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
+		
+		PORTB |= (1 << PB2); // A2
+		PORTD |= (1 << PD4); // C2
+		PORTD |= (1 << PD5); // D2
+		PORTD |= (1 << PD6); // E2
+		PORTD |= (1 << PD0); // F2
+		PORTC |= (1 << PC0); // G2
+	}
+}
+
+void d_seven(int module, int digit)
+{
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
+		
+		PORTC |= (1 << PC3); // A1
+		PORTC |= (1 << PC1); // B1
+		PORTD |= (1 << PD2); // C1
+	}
+	if (digit == 1)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
+		
+		PORTB |= (1 << PB2); // A2
+		PORTD |= (1 << PD1); // B2
+		PORTD |= (1 << PD4); // C2
+	}
+}
+
+void d_nine(int module, int digit)
+{
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
+		
+		PORTC |= (1 << PC3); // A1
+		PORTC |= (1 << PC1); // B1
+		PORTD |= (1 << PD2); // C1
+		PORTC |= (1 << PC2); // F1
+		PORTC |= (1 << PC4); // G1
+	}
+	if (digit == 1)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
+		
+		PORTB |= (1 << PB2); // A2
+		PORTD |= (1 << PD1); // B2
+		PORTD |= (1 << PD4); // C2
+		PORTD |= (1 << PD0); // F2
+		PORTC |= (1 << PC0); // G2
+	}
+}
+
+void d_zero(int module, int digit)
+{
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
+		
+		PORTC |= (1 << PC3); // A1
+		PORTC |= (1 << PC1); // B1
+		PORTD |= (1 << PD2); // C1
+		PORTB |= (1 << PB0); // D1
+		PORTD |= (1 << PD7); // E1
+		PORTC |= (1 << PC2); // F1
+	}
+	if (digit == 1)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
+		
+		PORTB |= (1 << PB2); // A2
+		PORTD |= (1 << PD1); // B2
+		PORTD |= (1 << PD4); // C2
+		PORTD |= (1 << PD5); // D2
+		PORTD |= (1 << PD6); // E2
+		PORTD |= (1 << PD0); // F2
+	}
+}
+
+void d_dash(int module, int digit)
+{
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
+		
+		PORTC |= (1 << PC4); // G1
+	}
+	if (digit == 1)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
+		
+		PORTC |= (1 << PC0); // G2
+	}
+}
+
+
+
+
+void resetModuleDigit(int module,int digit)
+{
+	if (digit == 0)
+	{
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			// set selected digit high
+			PORTB |= (1 << PB6);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PD3);
+		}
 		
 		PORTC &= ~(1 << PC3); // A1
 		PORTC &= ~(1 << PC1); // B1
@@ -101,48 +670,26 @@ void resetModuleDigit(int digit)
 		PORTC &= ~(1 << PC2); // F1
 		PORTC &= ~(1 << PC4); // G1
 	}
-	if (digit == 2)
+	if (digit == 1)
 	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-		PORTD &= ~(1 << PD3);
-		PORTB &= ~(1 << PB6);
-		// set selected digit high
-		PORTB |= (1 << PB7);
-				
-		PORTB &= ~(1 << PB2); // A2
-		PORTD &= ~(1 << PD1); // B2
-		PORTD &= ~(1 << PD4); // C2
-		PORTD &= ~(1 << PD5); // D2
-		PORTD &= ~(1 << PD6); // E2
-		PORTD &= ~(1 << PD0); // F2
-		PORTC &= ~(1 << PC0); // G2
-	}
-	if (digit == 3)
-	{
-		// set not wanted digits low
-		PORTC &= ~(1 << PC5);
-		PORTB &= ~(1 << PB7);
-		PORTD &= ~(1 << PB6);
-		// set selected digit high
-		PORTB |= (1 << PD3);
-		
-		PORTC &= ~(1 << PC3); // A1
-		PORTC &= ~(1 << PC1); // B1
-		PORTD &= ~(1 << PD2); // C1
-		PORTB &= ~(1 << PB0); // D1
-		PORTD &= ~(1 << PD7); // E1
-		PORTC &= ~(1 << PC2); // F1
-		PORTC &= ~(1 << PC4); // G1
-	}
-	if (digit == 4)
-	{
-		// set not wanted digits low
-		PORTB &= ~(1 << PB7);
-		PORTD &= ~(1 << PD3);
-		PORTB &= ~(1 << PB6);
-		// set selected digit high
-		PORTC |= (1 << PC5);
+		if (module == 0)
+		{
+			// set not wanted digits low
+			PORTC &= ~(1 << PC5);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTB |= (1 << PB7);
+		}
+		if (module == 1)
+		{
+			// set not wanted digits low
+			PORTB &= ~(1 << PB7);
+			PORTD &= ~(1 << PD3);
+			PORTB &= ~(1 << PB6);
+			// set selected digit high
+			PORTC |= (1 << PC5);
+		}
 		
 		PORTB &= ~(1 << PB2); // A2
 		PORTD &= ~(1 << PD1); // B2
@@ -152,7 +699,49 @@ void resetModuleDigit(int digit)
 		PORTD &= ~(1 << PD0); // F2
 		PORTC &= ~(1 << PC0); // G2
 	}
-	
+}
+
+void displayTest()
+{
+	for (int j=0; j<2; j++)
+	{
+		for (int k=0; k<2; k++)
+		{
+			d_dash(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+			d_zero(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+			d_one(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+			d_two(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+			d_three(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+			d_four(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+			d_five(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+			d_six(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+			d_seven(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+			d_eight(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+			d_nine(j,k);
+			_delay_ms(100);
+			resetModuleDigit(j,k);
+		}
+	}
 }
 
 int main(void)
@@ -181,18 +770,22 @@ int main(void)
 	
 	while (1)
 	{
-		d_eight(1);
-		_delay_ms(500);
-		resetModuleDigit(1);
-		d_eight(2);
-		_delay_ms(500);
-		resetModuleDigit(2);
-		d_eight(3);
-		_delay_ms(500);
-		resetModuleDigit(3);
-		d_eight(4);
-		_delay_ms(500);
-		resetModuleDigit(4);
+		displayTest();
+		
+		/*
+		d_eight(0,0);
+		_delay_ms(100);
+		resetModuleDigit(0,0);
+		d_eight(0,1);
+		_delay_ms(100);
+		resetModuleDigit(0,1);
+		d_eight(1,0);
+		_delay_ms(100);
+		resetModuleDigit(1,0);
+		d_eight(1,1);
+		_delay_ms(100);
+		resetModuleDigit(1,1);
+		*/
 	}
 	
 	/*
