@@ -182,16 +182,16 @@ int main(void)
 	while (1)
 	{
 		d_eight(1);
-		_delay_ms(500)
+		_delay_ms(500);
 		resetModuleDigit(1);
 		d_eight(2);
-		_delay_ms(500)
+		_delay_ms(500);
 		resetModuleDigit(2);
 		d_eight(3);
-		_delay_ms(500)
+		_delay_ms(500);
 		resetModuleDigit(3);
 		d_eight(4);
-		_delay_ms(500)
+		_delay_ms(500);
 		resetModuleDigit(4);
 	}
 	

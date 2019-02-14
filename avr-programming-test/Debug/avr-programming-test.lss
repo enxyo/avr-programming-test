@@ -3,27 +3,29 @@ avr-programming-test.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000106  00000000  00000000  00000054  2**1
+  0 .text         000001dc  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  0000015a  2**0
+  1 .data         00000000  00800060  00800060  00000230  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  0000015a  2**0
+  2 .comment      00000030  00000000  00000000  00000230  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000018c  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000260  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000030  00000000  00000000  000001c8  2**0
+  4 .debug_aranges 00000030  00000000  00000000  0000029c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000005c7  00000000  00000000  000001f8  2**0
+  5 .debug_info   0000076e  00000000  00000000  000002cc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000051a  00000000  00000000  000007bf  2**0
+  6 .debug_abbrev 0000056c  00000000  00000000  00000a3a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000003b6  00000000  00000000  00000cd9  2**0
+  7 .debug_line   00000554  00000000  00000000  00000fa6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000044  00000000  00000000  00001090  2**2
+  8 .debug_frame  00000044  00000000  00000000  000014fc  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000002f3  00000000  00000000  000010d4  2**0
+  9 .debug_str    00000338  00000000  00000000  00001540  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000020  00000000  00000000  000013c7  2**0
+ 10 .debug_loc    00000120  00000000  00000000  00001878  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000020  00000000  00000000  00001998  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -61,7 +63,7 @@ Disassembly of section .text:
   32:	10 e0       	ldi	r17, 0x00	; 0
   34:	a0 e6       	ldi	r26, 0x60	; 96
   36:	b0 e0       	ldi	r27, 0x00	; 0
-  38:	e6 e0       	ldi	r30, 0x06	; 6
+  38:	ec ed       	ldi	r30, 0xDC	; 220
   3a:	f1 e0       	ldi	r31, 0x01	; 1
   3c:	02 c0       	rjmp	.+4      	; 0x42 <__SREG__+0x3>
   3e:	05 90       	lpm	r0, Z+
@@ -69,148 +71,407 @@ Disassembly of section .text:
   42:	a0 36       	cpi	r26, 0x60	; 96
   44:	b1 07       	cpc	r27, r17
   46:	d9 f7       	brne	.-10     	; 0x3e <__SP_H__>
-  48:	3d d0       	rcall	.+122    	; 0xc4 <main>
-  4a:	5b c0       	rjmp	.+182    	; 0x102 <_exit>
+  48:	78 d0       	rcall	.+240    	; 0x13a <main>
+  4a:	c6 c0       	rjmp	.+396    	; 0x1d8 <_exit>
 
 0000004c <__bad_interrupt>:
   4c:	d9 cf       	rjmp	.-78     	; 0x0 <__vectors>
 
 0000004e <d_eight>:
-	// E1
-	PORTD &= ~(1 << PD7);
-	// F1
-	PORTC &= ~(1 << PC2);
-	// G1
-	PORTC &= ~(1 << PC4);
+
+int i=4;
+
+void d_eight(int digit)
+{
+	if(digit == 1)
   4e:	81 30       	cpi	r24, 0x01	; 1
   50:	91 05       	cpc	r25, r1
   52:	61 f4       	brne	.+24     	; 0x6c <d_eight+0x1e>
+	{
+		// set not wanted digits low
+		PORTC &= ~(1 << PC5);
   54:	ad 98       	cbi	0x15, 5	; 21
+		PORTB &= ~(1 << PB7);
   56:	c7 98       	cbi	0x18, 7	; 24
+		PORTD &= ~(1 << PD3);
   58:	93 98       	cbi	0x12, 3	; 18
+		// set selected digit high
+		PORTB |= (1 << PB6);
   5a:	c6 9a       	sbi	0x18, 6	; 24
+		
+		PORTC |= (1 << PC3); // A1
   5c:	ab 9a       	sbi	0x15, 3	; 21
+		PORTC |= (1 << PC1); // B1
   5e:	a9 9a       	sbi	0x15, 1	; 21
+		PORTD |= (1 << PD2); // C1
   60:	92 9a       	sbi	0x12, 2	; 18
+		PORTB |= (1 << PB0); // D1
   62:	c0 9a       	sbi	0x18, 0	; 24
+		PORTD |= (1 << PD7); // E1
   64:	97 9a       	sbi	0x12, 7	; 18
+		PORTC |= (1 << PC2); // F1
   66:	aa 9a       	sbi	0x15, 2	; 21
+		PORTC |= (1 << PC4); // G1
   68:	ac 9a       	sbi	0x15, 4	; 21
   6a:	1e c0       	rjmp	.+60     	; 0xa8 <d_eight+0x5a>
+	}
+	if (digit == 2)
   6c:	82 30       	cpi	r24, 0x02	; 2
   6e:	91 05       	cpc	r25, r1
   70:	61 f4       	brne	.+24     	; 0x8a <d_eight+0x3c>
+	{
+		// set not wanted digits low
+		PORTC &= ~(1 << PC5);
   72:	ad 98       	cbi	0x15, 5	; 21
+		PORTD &= ~(1 << PD3);
   74:	93 98       	cbi	0x12, 3	; 18
+		PORTB &= ~(1 << PB6);
   76:	c6 98       	cbi	0x18, 6	; 24
+		// set selected digit high
+		PORTB |= (1 << PB7);
   78:	c7 9a       	sbi	0x18, 7	; 24
+		
+		PORTB |= (1 << PB2); // A2
   7a:	c2 9a       	sbi	0x18, 2	; 24
+		PORTD |= (1 << PD1); // B2
   7c:	91 9a       	sbi	0x12, 1	; 18
+		PORTD |= (1 << PD4); // C2
   7e:	94 9a       	sbi	0x12, 4	; 18
+		PORTD |= (1 << PD5); // D2
   80:	95 9a       	sbi	0x12, 5	; 18
+		PORTD |= (1 << PD6); // E2
   82:	96 9a       	sbi	0x12, 6	; 18
+		PORTD |= (1 << PD0); // F2
   84:	90 9a       	sbi	0x12, 0	; 18
+		PORTC |= (1 << PC0); // G2
   86:	a8 9a       	sbi	0x15, 0	; 21
   88:	08 95       	ret
+	}
+	if (digit == 3)
   8a:	83 30       	cpi	r24, 0x03	; 3
   8c:	91 05       	cpc	r25, r1
   8e:	61 f4       	brne	.+24     	; 0xa8 <d_eight+0x5a>
+	{
+		// set not wanted digits low
+		PORTC &= ~(1 << PC5);
   90:	ad 98       	cbi	0x15, 5	; 21
+		PORTB &= ~(1 << PB7);
   92:	c7 98       	cbi	0x18, 7	; 24
+		PORTD &= ~(1 << PB6);
   94:	96 98       	cbi	0x12, 6	; 18
+		// set selected digit high
+		PORTB |= (1 << PD3);
   96:	c3 9a       	sbi	0x18, 3	; 24
+		
+		PORTC |= (1 << PC3); // A1
   98:	ab 9a       	sbi	0x15, 3	; 21
+		PORTC |= (1 << PC1); // B1
   9a:	a9 9a       	sbi	0x15, 1	; 21
+		PORTD |= (1 << PD2); // C1
   9c:	92 9a       	sbi	0x12, 2	; 18
+		PORTB |= (1 << PB0); // D1
   9e:	c0 9a       	sbi	0x18, 0	; 24
+		PORTD |= (1 << PD7); // E1
   a0:	97 9a       	sbi	0x12, 7	; 18
+		PORTC |= (1 << PC2); // F1
   a2:	aa 9a       	sbi	0x15, 2	; 21
+		PORTC |= (1 << PC4); // G1
   a4:	ac 9a       	sbi	0x15, 4	; 21
   a6:	08 95       	ret
+	}
+	if (digit == 4)
   a8:	04 97       	sbiw	r24, 0x04	; 4
   aa:	59 f4       	brne	.+22     	; 0xc2 <d_eight+0x74>
+	{
+		// set not wanted digits low
+		PORTB &= ~(1 << PB7);
   ac:	c7 98       	cbi	0x18, 7	; 24
+		PORTD &= ~(1 << PD3);
   ae:	93 98       	cbi	0x12, 3	; 18
+		PORTB &= ~(1 << PB6);
   b0:	c6 98       	cbi	0x18, 6	; 24
+		// set selected digit high
+		PORTC |= (1 << PC5);
   b2:	ad 9a       	sbi	0x15, 5	; 21
+		
+		PORTB |= (1 << PB2); // A2
   b4:	c2 9a       	sbi	0x18, 2	; 24
+		PORTD |= (1 << PD1); // B2
   b6:	91 9a       	sbi	0x12, 1	; 18
+		PORTD |= (1 << PD4); // C2
   b8:	94 9a       	sbi	0x12, 4	; 18
+		PORTD |= (1 << PD5); // D2
   ba:	95 9a       	sbi	0x12, 5	; 18
+		PORTD |= (1 << PD6); // E2
   bc:	96 9a       	sbi	0x12, 6	; 18
+		PORTD |= (1 << PD0); // F2
   be:	90 9a       	sbi	0x12, 0	; 18
+		PORTC |= (1 << PC0); // G2
   c0:	a8 9a       	sbi	0x15, 0	; 21
   c2:	08 95       	ret
 
-000000c4 <main>:
+000000c4 <resetModuleDigit>:
+	}
+}
+
+void resetModuleDigit(int digit)
+{
+	if (digit == 1)
+  c4:	81 30       	cpi	r24, 0x01	; 1
+  c6:	91 05       	cpc	r25, r1
+  c8:	61 f4       	brne	.+24     	; 0xe2 <resetModuleDigit+0x1e>
+	{
+		// set not wanted digits low
+		PORTC &= ~(1 << PC5);
+  ca:	ad 98       	cbi	0x15, 5	; 21
+		PORTB &= ~(1 << PB7);
+  cc:	c7 98       	cbi	0x18, 7	; 24
+		PORTD &= ~(1 << PD3);
+  ce:	93 98       	cbi	0x12, 3	; 18
+		// set selected digit high
+		PORTB |= (1 << PB6);
+  d0:	c6 9a       	sbi	0x18, 6	; 24
+		
+		PORTC &= ~(1 << PC3); // A1
+  d2:	ab 98       	cbi	0x15, 3	; 21
+		PORTC &= ~(1 << PC1); // B1
+  d4:	a9 98       	cbi	0x15, 1	; 21
+		PORTD &= ~(1 << PD2); // C1
+  d6:	92 98       	cbi	0x12, 2	; 18
+		PORTB &= ~(1 << PB0); // D1
+  d8:	c0 98       	cbi	0x18, 0	; 24
+		PORTD &= ~(1 << PD7); // E1
+  da:	97 98       	cbi	0x12, 7	; 18
+		PORTC &= ~(1 << PC2); // F1
+  dc:	aa 98       	cbi	0x15, 2	; 21
+		PORTC &= ~(1 << PC4); // G1
+  de:	ac 98       	cbi	0x15, 4	; 21
+  e0:	1e c0       	rjmp	.+60     	; 0x11e <resetModuleDigit+0x5a>
+	}
+	if (digit == 2)
+  e2:	82 30       	cpi	r24, 0x02	; 2
+  e4:	91 05       	cpc	r25, r1
+  e6:	61 f4       	brne	.+24     	; 0x100 <resetModuleDigit+0x3c>
+	{
+		// set not wanted digits low
+		PORTC &= ~(1 << PC5);
+  e8:	ad 98       	cbi	0x15, 5	; 21
+		PORTD &= ~(1 << PD3);
+  ea:	93 98       	cbi	0x12, 3	; 18
+		PORTB &= ~(1 << PB6);
+  ec:	c6 98       	cbi	0x18, 6	; 24
+		// set selected digit high
+		PORTB |= (1 << PB7);
+  ee:	c7 9a       	sbi	0x18, 7	; 24
+				
+		PORTB &= ~(1 << PB2); // A2
+  f0:	c2 98       	cbi	0x18, 2	; 24
+		PORTD &= ~(1 << PD1); // B2
+  f2:	91 98       	cbi	0x12, 1	; 18
+		PORTD &= ~(1 << PD4); // C2
+  f4:	94 98       	cbi	0x12, 4	; 18
+		PORTD &= ~(1 << PD5); // D2
+  f6:	95 98       	cbi	0x12, 5	; 18
+		PORTD &= ~(1 << PD6); // E2
+  f8:	96 98       	cbi	0x12, 6	; 18
+		PORTD &= ~(1 << PD0); // F2
+  fa:	90 98       	cbi	0x12, 0	; 18
+		PORTC &= ~(1 << PC0); // G2
+  fc:	a8 98       	cbi	0x15, 0	; 21
+  fe:	08 95       	ret
+	}
+	if (digit == 3)
+ 100:	83 30       	cpi	r24, 0x03	; 3
+ 102:	91 05       	cpc	r25, r1
+ 104:	61 f4       	brne	.+24     	; 0x11e <resetModuleDigit+0x5a>
+	{
+		// set not wanted digits low
+		PORTC &= ~(1 << PC5);
+ 106:	ad 98       	cbi	0x15, 5	; 21
+		PORTB &= ~(1 << PB7);
+ 108:	c7 98       	cbi	0x18, 7	; 24
+		PORTD &= ~(1 << PB6);
+ 10a:	96 98       	cbi	0x12, 6	; 18
+		// set selected digit high
+		PORTB |= (1 << PD3);
+ 10c:	c3 9a       	sbi	0x18, 3	; 24
+		
+		PORTC &= ~(1 << PC3); // A1
+ 10e:	ab 98       	cbi	0x15, 3	; 21
+		PORTC &= ~(1 << PC1); // B1
+ 110:	a9 98       	cbi	0x15, 1	; 21
+		PORTD &= ~(1 << PD2); // C1
+ 112:	92 98       	cbi	0x12, 2	; 18
+		PORTB &= ~(1 << PB0); // D1
+ 114:	c0 98       	cbi	0x18, 0	; 24
+		PORTD &= ~(1 << PD7); // E1
+ 116:	97 98       	cbi	0x12, 7	; 18
+		PORTC &= ~(1 << PC2); // F1
+ 118:	aa 98       	cbi	0x15, 2	; 21
+		PORTC &= ~(1 << PC4); // G1
+ 11a:	ac 98       	cbi	0x15, 4	; 21
+ 11c:	08 95       	ret
+	}
+	if (digit == 4)
+ 11e:	04 97       	sbiw	r24, 0x04	; 4
+ 120:	59 f4       	brne	.+22     	; 0x138 <resetModuleDigit+0x74>
+	{
+		// set not wanted digits low
+		PORTB &= ~(1 << PB7);
+ 122:	c7 98       	cbi	0x18, 7	; 24
+		PORTD &= ~(1 << PD3);
+ 124:	93 98       	cbi	0x12, 3	; 18
+		PORTB &= ~(1 << PB6);
+ 126:	c6 98       	cbi	0x18, 6	; 24
+		// set selected digit high
+		PORTC |= (1 << PC5);
+ 128:	ad 9a       	sbi	0x15, 5	; 21
+		
+		PORTB &= ~(1 << PB2); // A2
+ 12a:	c2 98       	cbi	0x18, 2	; 24
+		PORTD &= ~(1 << PD1); // B2
+ 12c:	91 98       	cbi	0x12, 1	; 18
+		PORTD &= ~(1 << PD4); // C2
+ 12e:	94 98       	cbi	0x12, 4	; 18
+		PORTD &= ~(1 << PD5); // D2
+ 130:	95 98       	cbi	0x12, 5	; 18
+		PORTD &= ~(1 << PD6); // E2
+ 132:	96 98       	cbi	0x12, 6	; 18
+		PORTD &= ~(1 << PD0); // F2
+ 134:	90 98       	cbi	0x12, 0	; 18
+		PORTC &= ~(1 << PC0); // G2
+ 136:	a8 98       	cbi	0x15, 0	; 21
+ 138:	08 95       	ret
+
+0000013a <main>:
 }
 
 int main(void)
 {
 	/* Ausgänge setzen. */
 	DDRC |= (1 << PC5); // 1. Modul 2. Ziffer
-  c4:	a5 9a       	sbi	0x14, 5	; 20
+ 13a:	a5 9a       	sbi	0x14, 5	; 20
 	DDRB |= (1 << PB7); // 2. Modul 2. Ziffer
-  c6:	bf 9a       	sbi	0x17, 7	; 23
+ 13c:	bf 9a       	sbi	0x17, 7	; 23
 	DDRD |= (1 << PD3); // 1. Modul 1. Ziffer
-  c8:	8b 9a       	sbi	0x11, 3	; 17
+ 13e:	8b 9a       	sbi	0x11, 3	; 17
 	DDRB |= (1 << PB6); // 2. Modul 1. Ziffer
-  ca:	be 9a       	sbi	0x17, 6	; 23
+ 140:	be 9a       	sbi	0x17, 6	; 23
 
 	DDRB |= (1 << PB2); // A2
-  cc:	ba 9a       	sbi	0x17, 2	; 23
+ 142:	ba 9a       	sbi	0x17, 2	; 23
 	DDRD |= (1 << PD1); // B2
-  ce:	89 9a       	sbi	0x11, 1	; 17
+ 144:	89 9a       	sbi	0x11, 1	; 17
 	DDRD |= (1 << PD4); // C2
-  d0:	8c 9a       	sbi	0x11, 4	; 17
+ 146:	8c 9a       	sbi	0x11, 4	; 17
 	DDRD |= (1 << PD5); // D2
-  d2:	8d 9a       	sbi	0x11, 5	; 17
+ 148:	8d 9a       	sbi	0x11, 5	; 17
 	DDRD |= (1 << PD6); // E2
-  d4:	8e 9a       	sbi	0x11, 6	; 17
+ 14a:	8e 9a       	sbi	0x11, 6	; 17
 	DDRD |= (1 << PD0); // F2
-  d6:	88 9a       	sbi	0x11, 0	; 17
+ 14c:	88 9a       	sbi	0x11, 0	; 17
 	DDRC |= (1 << PC0); // G2
-  d8:	a0 9a       	sbi	0x14, 0	; 20
+ 14e:	a0 9a       	sbi	0x14, 0	; 20
 	
 	DDRC |= (1 << PC3); // A1
-  da:	a3 9a       	sbi	0x14, 3	; 20
+ 150:	a3 9a       	sbi	0x14, 3	; 20
 	DDRC |= (1 << PC1); // B1
-  dc:	a1 9a       	sbi	0x14, 1	; 20
+ 152:	a1 9a       	sbi	0x14, 1	; 20
 	DDRD |= (1 << PD2); // C1
-  de:	8a 9a       	sbi	0x11, 2	; 17
+ 154:	8a 9a       	sbi	0x11, 2	; 17
 	DDRB |= (1 << PB0); // D1
-  e0:	b8 9a       	sbi	0x17, 0	; 23
+ 156:	b8 9a       	sbi	0x17, 0	; 23
 	DDRD |= (1 << PD7); // E1
-  e2:	8f 9a       	sbi	0x11, 7	; 17
+ 158:	8f 9a       	sbi	0x11, 7	; 17
 	DDRC |= (1 << PC2); // F1
-  e4:	a2 9a       	sbi	0x14, 2	; 20
+ 15a:	a2 9a       	sbi	0x14, 2	; 20
 	DDRC |= (1 << PC4); // G1
-  e6:	a4 9a       	sbi	0x14, 4	; 20
+ 15c:	a4 9a       	sbi	0x14, 4	; 20
 	
 	while (1)
 	{
-		//resetModuleOneDigitOne();
-		//_delay_ms(500);
 		d_eight(1);
-  e8:	81 e0       	ldi	r24, 0x01	; 1
-  ea:	90 e0       	ldi	r25, 0x00	; 0
-  ec:	b0 df       	rcall	.-160    	; 0x4e <d_eight>
+ 15e:	81 e0       	ldi	r24, 0x01	; 1
+ 160:	90 e0       	ldi	r25, 0x00	; 0
+ 162:	75 df       	rcall	.-278    	; 0x4e <d_eight>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 164:	2f ef       	ldi	r18, 0xFF	; 255
+ 166:	84 e3       	ldi	r24, 0x34	; 52
+ 168:	9c e0       	ldi	r25, 0x0C	; 12
+ 16a:	21 50       	subi	r18, 0x01	; 1
+ 16c:	80 40       	sbci	r24, 0x00	; 0
+ 16e:	90 40       	sbci	r25, 0x00	; 0
+ 170:	e1 f7       	brne	.-8      	; 0x16a <main+0x30>
+ 172:	00 c0       	rjmp	.+0      	; 0x174 <main+0x3a>
+ 174:	00 00       	nop
+		_delay_ms(500);
+		resetModuleDigit(1);
+ 176:	81 e0       	ldi	r24, 0x01	; 1
+ 178:	90 e0       	ldi	r25, 0x00	; 0
+ 17a:	a4 df       	rcall	.-184    	; 0xc4 <resetModuleDigit>
 		d_eight(2);
-  ee:	82 e0       	ldi	r24, 0x02	; 2
-  f0:	90 e0       	ldi	r25, 0x00	; 0
-  f2:	ad df       	rcall	.-166    	; 0x4e <d_eight>
+ 17c:	82 e0       	ldi	r24, 0x02	; 2
+ 17e:	90 e0       	ldi	r25, 0x00	; 0
+ 180:	66 df       	rcall	.-308    	; 0x4e <d_eight>
+ 182:	2f ef       	ldi	r18, 0xFF	; 255
+ 184:	84 e3       	ldi	r24, 0x34	; 52
+ 186:	9c e0       	ldi	r25, 0x0C	; 12
+ 188:	21 50       	subi	r18, 0x01	; 1
+ 18a:	80 40       	sbci	r24, 0x00	; 0
+ 18c:	90 40       	sbci	r25, 0x00	; 0
+ 18e:	e1 f7       	brne	.-8      	; 0x188 <main+0x4e>
+ 190:	00 c0       	rjmp	.+0      	; 0x192 <main+0x58>
+ 192:	00 00       	nop
+		_delay_ms(500);
+		resetModuleDigit(2);
+ 194:	82 e0       	ldi	r24, 0x02	; 2
+ 196:	90 e0       	ldi	r25, 0x00	; 0
+ 198:	95 df       	rcall	.-214    	; 0xc4 <resetModuleDigit>
 		d_eight(3);
-  f4:	83 e0       	ldi	r24, 0x03	; 3
-  f6:	90 e0       	ldi	r25, 0x00	; 0
-  f8:	aa df       	rcall	.-172    	; 0x4e <d_eight>
+ 19a:	83 e0       	ldi	r24, 0x03	; 3
+ 19c:	90 e0       	ldi	r25, 0x00	; 0
+ 19e:	57 df       	rcall	.-338    	; 0x4e <d_eight>
+ 1a0:	2f ef       	ldi	r18, 0xFF	; 255
+ 1a2:	84 e3       	ldi	r24, 0x34	; 52
+ 1a4:	9c e0       	ldi	r25, 0x0C	; 12
+ 1a6:	21 50       	subi	r18, 0x01	; 1
+ 1a8:	80 40       	sbci	r24, 0x00	; 0
+ 1aa:	90 40       	sbci	r25, 0x00	; 0
+ 1ac:	e1 f7       	brne	.-8      	; 0x1a6 <main+0x6c>
+ 1ae:	00 c0       	rjmp	.+0      	; 0x1b0 <main+0x76>
+ 1b0:	00 00       	nop
+		_delay_ms(500);
+		resetModuleDigit(3);
+ 1b2:	83 e0       	ldi	r24, 0x03	; 3
+ 1b4:	90 e0       	ldi	r25, 0x00	; 0
+ 1b6:	86 df       	rcall	.-244    	; 0xc4 <resetModuleDigit>
 		d_eight(4);
-  fa:	84 e0       	ldi	r24, 0x04	; 4
-  fc:	90 e0       	ldi	r25, 0x00	; 0
-  fe:	a7 df       	rcall	.-178    	; 0x4e <d_eight>
- 100:	f3 cf       	rjmp	.-26     	; 0xe8 <main+0x24>
+ 1b8:	84 e0       	ldi	r24, 0x04	; 4
+ 1ba:	90 e0       	ldi	r25, 0x00	; 0
+ 1bc:	48 df       	rcall	.-368    	; 0x4e <d_eight>
+ 1be:	2f ef       	ldi	r18, 0xFF	; 255
+ 1c0:	84 e3       	ldi	r24, 0x34	; 52
+ 1c2:	9c e0       	ldi	r25, 0x0C	; 12
+ 1c4:	21 50       	subi	r18, 0x01	; 1
+ 1c6:	80 40       	sbci	r24, 0x00	; 0
+ 1c8:	90 40       	sbci	r25, 0x00	; 0
+ 1ca:	e1 f7       	brne	.-8      	; 0x1c4 <main+0x8a>
+ 1cc:	00 c0       	rjmp	.+0      	; 0x1ce <main+0x94>
+ 1ce:	00 00       	nop
+		_delay_ms(500);
+		resetModuleDigit(4);
+ 1d0:	84 e0       	ldi	r24, 0x04	; 4
+ 1d2:	90 e0       	ldi	r25, 0x00	; 0
+ 1d4:	77 df       	rcall	.-274    	; 0xc4 <resetModuleDigit>
+ 1d6:	c3 cf       	rjmp	.-122    	; 0x15e <main+0x24>
 
-00000102 <_exit>:
- 102:	f8 94       	cli
+000001d8 <_exit>:
+ 1d8:	f8 94       	cli
 
-00000104 <__stop_program>:
- 104:	ff cf       	rjmp	.-2      	; 0x104 <__stop_program>
+000001da <__stop_program>:
+ 1da:	ff cf       	rjmp	.-2      	; 0x1da <__stop_program>
